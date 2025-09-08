@@ -68,7 +68,7 @@ export default function Home() {
 
         {/* Descriptive Text */}
         <div className="text-center space-y-4">
-          <h1 className="ft-serif text-3xl md:text-4xl font-bold text-foreground leading-tight">
+          <h1 className="ft-serif text-3xl md:text-4xl font-bold text-foreground leading-tight" style={{fontStyle: 'normal'}}>
             Deals Young Professional Society
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
