@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Regime Font Face Declarations */
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-Regular_1757371424680.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-RegularOblique_1757371424680.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-Light_1757371424678.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-LightOblique_1757371424679.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-Medium_1757371424679.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-MediumOblique_1757371424680.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Regime';
+  src: url('@assets/Regime-BoldOblique_1757371424677.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --background: hsl(28, 100%, 98%);
   --foreground: hsl(20, 20%, 15%);
@@ -35,8 +92,8 @@
   --sidebar-accent-foreground: hsl(20, 20%, 25%);
   --sidebar-border: hsl(25, 30%, 85%);
   --sidebar-ring: hsl(351, 80%, 58%);
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-serif: Georgia, Times New Roman, serif;
+  --font-sans: 'Regime', Inter, system-ui, sans-serif;
+  --font-serif: 'Regime', Georgia, Times New Roman, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.25rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00);
@@ -84,8 +141,8 @@
   --sidebar-accent-foreground: hsl(28, 30%, 85%);
   --sidebar-border: hsl(25, 20%, 20%);
   --sidebar-ring: hsl(351, 80%, 58%);
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-serif: Georgia, Times New Roman, serif;
+  --font-sans: 'Regime', Inter, system-ui, sans-serif;
+  --font-serif: 'Regime', Georgia, Times New Roman, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.25rem;
 }
@@ -102,7 +159,7 @@
 }
 
 .ft-serif {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'Regime', Georgia, 'Times New Roman', serif;
 }
 
 .form-field {
