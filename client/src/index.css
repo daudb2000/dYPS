@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(28, 100%, 98%);
+  --foreground: hsl(20, 20%, 15%);
+  --card: hsl(28, 50%, 96%);
+  --card-foreground: hsl(20, 20%, 15%);
+  --popover: hsl(28, 50%, 96%);
+  --popover-foreground: hsl(20, 20%, 15%);
+  --primary: hsl(351, 80%, 58%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(25, 30%, 85%);
+  --secondary-foreground: hsl(20, 20%, 25%);
+  --muted: hsl(25, 20%, 90%);
+  --muted-foreground: hsl(20, 10%, 45%);
+  --accent: hsl(351, 80%, 58%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(25, 30%, 85%);
+  --input: hsl(25, 30%, 85%);
+  --ring: hsl(351, 80%, 58%);
+  --chart-1: hsl(351, 80%, 58%);
+  --chart-2: hsl(159.7826, 100%, 36.0784%);
+  --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+  --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+  --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+  --sidebar: hsl(28, 50%, 96%);
+  --sidebar-foreground: hsl(20, 20%, 15%);
+  --sidebar-primary: hsl(351, 80%, 58%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(25, 30%, 85%);
+  --sidebar-accent-foreground: hsl(20, 20%, 25%);
+  --sidebar-border: hsl(25, 30%, 85%);
+  --sidebar-ring: hsl(351, 80%, 58%);
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: Georgia, Times New Roman, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.25rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00), 0px 1px 2px -1px hsl(351, 80%, 58%, 0.00);
+  --shadow: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00), 0px 1px 2px -1px hsl(351, 80%, 58%, 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00), 0px 2px 4px -1px hsl(351, 80%, 58%, 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00), 0px 4px 6px -1px hsl(351, 80%, 58%, 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00), 0px 8px 10px -1px hsl(351, 80%, 58%, 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(351, 80%, 58%, 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(20, 20%, 8%);
+  --foreground: hsl(28, 50%, 90%);
+  --card: hsl(20, 20%, 12%);
+  --card-foreground: hsl(28, 50%, 90%);
+  --popover: hsl(20, 20%, 12%);
+  --popover-foreground: hsl(28, 50%, 90%);
+  --primary: hsl(351, 80%, 58%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(25, 20%, 20%);
+  --secondary-foreground: hsl(28, 30%, 85%);
+  --muted: hsl(25, 10%, 15%);
+  --muted-foreground: hsl(25, 15%, 55%);
+  --accent: hsl(351, 80%, 58%);
+  --accent-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 84%, 60%);
+  --destructive-foreground: hsl(0, 0%, 100%);
+  --border: hsl(25, 20%, 20%);
+  --input: hsl(25, 20%, 20%);
+  --ring: hsl(351, 80%, 58%);
+  --chart-1: hsl(351, 80%, 58%);
+  --chart-2: hsl(159.7826, 100%, 36.0784%);
+  --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
+  --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
+  --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
+  --sidebar: hsl(20, 20%, 12%);
+  --sidebar-foreground: hsl(28, 50%, 90%);
+  --sidebar-primary: hsl(351, 80%, 58%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(25, 20%, 20%);
+  --sidebar-accent-foreground: hsl(28, 30%, 85%);
+  --sidebar-border: hsl(25, 20%, 20%);
+  --sidebar-ring: hsl(351, 80%, 58%);
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: Georgia, Times New Roman, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.25rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    line-height: 1.6;
+  }
+}
+
+.ft-serif {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.form-field {
+  transition: all 0.2s ease-in-out;
+}
+
+.form-field:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 2px hsla(351, 80%, 58%, 0.1);
+}
+
+.btn-submit {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-submit:hover {
+  background-color: hsl(351, 80%, 52%);
+  transform: translateY(-1px);
+}
+
+.link-policy {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 0.2s ease-in-out;
+}
+
+.link-policy:hover {
+  border-bottom-color: var(--primary);
+}
