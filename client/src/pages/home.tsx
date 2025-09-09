@@ -111,6 +111,25 @@ export default function Home() {
             Join our community of ambitious professionals shaping the future of finance.
           </p>
         </div>
+
+        {/* Additional Description */}
+        <div className="text-center space-y-6">
+          <p className={`text-base leading-relaxed max-w-2xl mx-auto ${
+            designVariant === 'background' 
+              ? 'text-slate-300' 
+              : 'text-muted-foreground'
+          }`}>
+            The Deals Young Professional Society (DYPS) is a Manchester based referral-only society dedicated to fostering professional relationships and knowledge exchange among young practitioners in the small to mid-market corporate transaction sector.
+          </p>
+          
+          <p className={`text-sm ${
+            designVariant === 'background' 
+              ? 'text-slate-400' 
+              : 'text-muted-foreground'
+          }`}>
+            We target Corporate Financiers, Investment Bankers, Venture Capitalists, Private Equity professionals, Corporate Lawyers, and Transaction Services specialists.
+          </p>
+        </div>
       </div>
 
       {/* Membership Form - Narrower Section */}
