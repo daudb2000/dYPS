@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { insertMembershipApplicationSchema, type InsertMembershipApplication } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -211,13 +212,13 @@ export default function Home() {
             <div className="mt-6 pt-4 border-t border-border text-center">
               <p className="text-sm text-muted-foreground">
                 By submitting this form, you agree to our{" "}
-                <a 
-                  href="#" 
+                <Link 
+                  to="/data-retention" 
                   className="link-policy text-amber-900 hover:text-amber-800 hover:underline transition-all duration-200"
                   data-testid="link-data-policy"
                 >
                   Data Retention Policy
-                </a>
+                </Link>
               </p>
             </div>
           </CardContent>

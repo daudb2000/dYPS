@@ -1,0 +1,147 @@
+---
+
+# Data Retention and Processing Policy
+
+**Last updated: 9 September 2025**
+
+## 1. Introduction and Scope
+
+This Data Retention and Processing Policy ("**Policy**") sets out the approach adopted by DYPS ("**we**", "**us**", "**our**") regarding the collection, processing, retention, and disposal of personal data obtained through our membership application process. This Policy applies to all personal data processed by DYPS in connection with membership applications submitted via our website and related services.
+
+DYPS is an unincorporated professional society operating as a membership organisation under a formal constitution. For the purposes of applicable data protection legislation, including the UK General Data Protection Regulation ("**UK GDPR**") and the Data Protection Act 2018 ("**DPA 2018**"), DYPS acts as the data controller in respect of the personal data described in this Policy.
+
+**Data Controller Details:**  
+Organisation: DYPS  
+Data Protection Contact: Daud@dyps.uk
+
+## 2. Categories of Personal Data Processed
+
+In furtherance of our legitimate business interests in operating as a professional membership organisation, we collect and process the following categories of personal data from prospective members:
+
+(a) **Identity Data:** comprising full legal name as provided by the applicant;  
+(b) **Contact Data:** comprising primary email address for correspondence purposes;  
+(c) **Professional Data:** comprising current job role or professional title and employing organisation or company name;  
+(d) **Application Data:** comprising any additional information voluntarily provided as part of the application submission process.
+
+## 3. Purposes and Legal Basis for Processing
+
+### 3.1 Primary Processing Purposes
+
+We process the aforementioned personal data for the following specified, explicit, and legitimate purposes:
+
+(a) To conduct a comprehensive assessment and evaluation of membership applications in accordance with our established criteria and procedures;  
+(b) To facilitate communication with applicants regarding the status, progress, and outcome of their applications;  
+(c) To maintain accurate and up-to-date membership records and contact databases for successful applicants;  
+(d) To ensure the integrity, security, and proper administration of our application and membership processes;  
+(e) To prevent, detect, and respond to potential misuse, abuse, or fraudulent activity in connection with our services.
+
+### 3.2 Legal Basis
+
+Our processing activities are conducted in reliance upon Article 6(1)(f) of the UK GDPR, namely our legitimate interests in operating as a professional membership organisation, managing applications efficiently, maintaining membership records, and protecting the integrity of our processes. We have conducted appropriate balancing assessments to ensure that our legitimate interests do not override the fundamental rights and freedoms of data subjects.
+
+## 4. Application Review and Response Framework
+
+### 4.1 Operational Constraints
+
+Prospective applicants should be aware that DYPS currently operates with limited human resources and administrative capacity. Consequently, during periods of high application volume or operational demands, we may be unable to provide individual responses to all applicants within standard timeframes. While we endeavour to review and process all applications received, response times may vary significantly based on operational circumstances beyond our immediate control.
+
+### 4.2 No Guarantee of Response
+
+The submission of an application does not create any obligation on our part to provide a substantive response or feedback. Our ability to respond to applications is subject to available resources and operational priorities.
+
+## 5. Data Retention Periods and Disposal
+
+### 5.1 Successful Applications
+
+Where an application results in successful admission to membership:
+
+(a) Personal data will be transferred to our primary membership database, currently maintained using the Notion platform;  
+(b) Such data will be retained for the duration of the individual's membership status;  
+(c) Upon written request to DYPS management, or upon termination of membership, personal data will be permanently deleted from our systems within a reasonable timeframe;  
+(d) Successful applicants may request deletion of their personal data at any time by contacting our designated data protection contact.
+
+### 5.2 Unsuccessful Applications
+
+Where an application does not result in admission to membership:
+
+(a) All associated personal data will be permanently and irreversibly deleted from our systems within thirty (30) calendar days of the final determination;  
+(b) Where operationally feasible, applicants will receive notification of the application outcome prior to data deletion;  
+(c) No backup copies or archived versions of unsuccessful application data will be retained beyond this period.
+
+### 5.3 Policy Violations and Protective Measures
+
+In circumstances where we have reasonable grounds to believe that an applicant has engaged in conduct that constitutes a violation of our policies, including but not limited to:
+
+(a) Submission of fraudulent, misleading, or deliberately false application information;  
+(b) Harassment of DYPS members, staff, or representatives;  
+(c) Misconduct at DYPS events, activities, or in connection with DYPS-related matters;  
+(d) Repeated submission of applications following explicit rejection;  
+(e) Any other conduct deemed detrimental to the interests or reputation of DYPS;
+
+We reserve the right to retain limited personal data (specifically, name and email address) on a secure, access-restricted system for protective purposes. Such data will be:
+
+(i) Maintained on a confidential basis and not accessible to general DYPS team members;  
+(ii) Retained for an initial period of six (6) months from the date of the relevant incident;  
+(iii) Subject to periodic review at six-month intervals to determine whether continued retention remains necessary and proportionate;  
+(iv) Permanently deleted when no longer required for protective purposes.
+
+## 6. Third-Party Data Processors and International Transfers
+
+### 6.1 Email Communications
+
+For the purpose of sending automated email communications, including application confirmations and status updates, we utilise NodeMailer technology in conjunction with Gmail services provided by Google LLC. Google LLC operates under appropriate data protection frameworks and maintains suitable technical and organisational measures for the protection of personal data.
+
+### 6.2 Data Storage and Management
+
+Successful applicant data is stored and managed using the Notion platform operated by Notion Labs, Inc. This platform provides secure cloud-based database functionality with appropriate security controls and access restrictions.
+
+### 6.3 Website Hosting
+
+Our website and associated application infrastructure are hosted by GoDaddy Operating Company, LLC ("**GoDaddy**"). GoDaddy maintains industry-standard security measures and operates in compliance with applicable data protection requirements.
+
+### 6.4 Processor Obligations
+
+All third-party service providers acting as data processors on our behalf are selected based on their ability to provide sufficient guarantees regarding the implementation of appropriate technical and organisational measures. Where applicable, we maintain written agreements with such processors that meet the requirements of Article 28 of the UK GDPR.
+
+## 7. Data Security and Protection Measures
+
+We implement and maintain appropriate technical and organisational measures designed to ensure a level of security appropriate to the risk of processing, taking into account the state of the art, implementation costs, and the nature, scope, context, and purposes of processing. These measures include:
+
+(a) Pseudonymisation and encryption of personal data where appropriate;  
+(b) Ongoing confidentiality, integrity, availability, and resilience of processing systems;  
+(c) Regular testing, assessing, and evaluating the effectiveness of security measures;  
+(d) Access controls and authentication procedures for personnel handling personal data;  
+(e) Incident response and breach notification procedures.
+
+## 8. Data Subject Contact and Enquiries
+
+Any enquiries regarding this Policy, our data processing activities, or requests relating to personal data should be directed to our designated data protection contact:
+
+**Email:** Daud@dyps.uk
+
+We endeavour to respond to all data protection enquiries within the timeframes prescribed by applicable legislation, typically within thirty (30) calendar days of receipt.
+
+## 9. Regulatory Oversight and Complaints
+
+Data subjects who believe that our processing of their personal data does not comply with applicable data protection legislation have the right to lodge a complaint with the Information Commissioner's Office, the UK's supervisory authority for data protection matters.
+
+**Information Commissioner's Office**  
+**Website:** ico.org.uk  
+**Telephone:** 0303 123 1113  
+**Postal Address:** Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire SK9 5AF
+
+## 10. Policy Amendments and Updates
+
+This Policy may be updated from time to time to reflect changes in our processing activities, legal requirements, or operational procedures. Any material changes will be communicated through publication of a revised version on our website, with the effective date clearly indicated. Continued use of our services following such updates shall constitute acceptance of the revised terms.
+
+## 11. Interpretation and Governing Law
+
+This Policy shall be interpreted in accordance with the laws of England and Wales. Any disputes arising in connection with this Policy or our data processing activities shall be subject to the exclusive jurisdiction of the courts of England and Wales.
+
+***
+
+**Document Version:** 1.0  
+**Effective Date:** 9 September 2025  
+**Next Review Date:** 9 September 2026
+
+Sources
