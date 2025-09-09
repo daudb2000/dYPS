@@ -220,7 +220,7 @@ export default function Home() {
                     className="mt-1"
                     data-testid="checkbox-consent"
                   />
-                  <Label htmlFor="consent" className="text-sm text-foreground leading-relaxed cursor-pointer">
+                  <Label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
                     I consent to being contacted regarding my membership application status
                   </Label>
                 </div>
