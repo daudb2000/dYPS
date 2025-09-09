@@ -85,7 +85,7 @@ export default function Home() {
         <div className="text-center">
           <div className="inline-block">
             <img 
-              src="@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448115347.jpeg" 
+              src="@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448294978.jpeg" 
               alt="Deals Young Professional Society Logo" 
               className="h-20 w-auto mx-auto"
               data-testid="logo-image"
