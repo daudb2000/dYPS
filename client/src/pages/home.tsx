@@ -72,7 +72,7 @@ export default function Home() {
 
         {/* Title and Description */}
         <div className="text-center space-y-4">
-          <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
+          <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-800 via-slate-900 via-amber-50 via-slate-900 to-slate-800 bg-[length:300%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
           <p className="text-base leading-relaxed max-w-2xl mx-auto text-muted-foreground">
@@ -94,8 +94,8 @@ export default function Home() {
               </div>
             </div>
             
-            {/* Second row - 3 roles, aligned to start of "Venture" */}
-            <div className="flex gap-3 self-center" style={{ marginLeft: '80px' }}>
+            {/* Second row - 3 roles with closing text */}
+            <div className="flex items-center gap-3 self-center" style={{ marginLeft: '80px' }}>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Private Equity
               </span>
@@ -105,11 +105,7 @@ export default function Home() {
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Transaction Services
               </span>
-            </div>
-            
-            {/* Closing text */}
-            <div className="text-center">
-              <span className="text-sm text-muted-foreground"> to foster key relationships</span>
+              <span className="text-sm text-muted-foreground ml-2"> to foster key relationships</span>
             </div>
           </div>
         </div>
