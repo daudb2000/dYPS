@@ -10,7 +10,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import logoImage from "@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448294978.jpeg";
 import dypsImage from "@assets/image_1757450631841.png";
 
 export default function Home() {
@@ -81,17 +80,11 @@ export default function Home() {
         
         {/* Logo Section */}
         <div className="text-center">
-          <div className="inline-flex items-center gap-6">
-            <img 
-              src={logoImage} 
-              alt="Deals Young Professional Society Logo" 
-              className="h-24 w-24 object-cover object-top rounded-lg shadow-md"
-              data-testid="logo-image"
-            />
+          <div className="inline-block">
             <img 
               src={dypsImage} 
               alt="DYPS" 
-              className="h-16 w-auto object-contain"
+              className="h-20 w-auto object-contain"
               data-testid="dyps-logo"
             />
           </div>
