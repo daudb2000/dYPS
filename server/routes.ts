@@ -1,9 +1,17 @@
-import type { Express } from "express";
+import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
 import { sendApplicationNotification } from "./emailService";
 import { z } from "zod";
+
+// Extend Express session interface
+declare module 'express-session' {
+  interface SessionData {
+    isAdmin: boolean;
+    adminUsername: string;
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // POST /api/membership-applications - Submit membership application
@@ -33,7 +41,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin authentication middleware
-  const requireAdmin = (req: any, res: any, next: any) => {
+  const requireAdmin = (req: Request, res: Response, next: Function) => {
     if (!req.session?.isAdmin) {
       return res.status(401).json({ success: false, message: "Admin access required" });
     }
@@ -59,8 +67,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // POST /api/admin/logout - Admin logout
-  app.post("/api/admin/logout", (req, res) => {
-    req.session.destroy((err) => {
+  app.post("/api/admin/logout", (req: Request, res: Response) => {
+    req.session.destroy((err: any) => {
       if (err) {
         return res.status(500).json({ success: false, message: "Logout failed" });
       }

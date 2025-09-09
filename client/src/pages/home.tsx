@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import logoImage from "@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448294978.jpeg";
+import dypsImage from "@assets/image_1757450631841.png";
 
 export default function Home() {
   const { toast } = useToast();
@@ -80,19 +81,25 @@ export default function Home() {
         
         {/* Logo Section */}
         <div className="text-center">
-          <div className="inline-block">
+          <div className="inline-flex items-center gap-6">
             <img 
               src={logoImage} 
               alt="Deals Young Professional Society Logo" 
-              className="h-24 w-24 mx-auto object-cover object-top rounded-lg shadow-md"
+              className="h-24 w-24 object-cover object-top rounded-lg shadow-md"
               data-testid="logo-image"
+            />
+            <img 
+              src={dypsImage} 
+              alt="DYPS" 
+              className="h-16 w-auto object-contain"
+              data-testid="dyps-logo"
             />
           </div>
         </div>
 
         {/* Descriptive Text */}
         <div className="text-center space-y-4">
-          <h1 className={`ft-serif-straight text-3xl md:text-4xl leading-tight ${
+          <h1 className={`ft-serif-straight text-3xl md:text-4xl leading-tight whitespace-nowrap ${
             designVariant === 'background' 
               ? 'text-white' 
               : 'text-transparent bg-gradient-to-r from-slate-900 via-blue-800 to-slate-700 bg-clip-text font-black'
