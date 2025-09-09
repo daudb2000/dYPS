@@ -16,7 +16,10 @@ export const membershipApplications = pgTable("membership_applications", {
   role: text("role").notNull(),
   email: text("email").notNull(),
   consent: boolean("consent").notNull().default(false),
+  status: text("status").notNull().default("pending"),
   submittedAt: timestamp("submitted_at").notNull().defaultNow(),
+  reviewedAt: timestamp("reviewed_at"),
+  reviewedBy: text("reviewed_by"),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -27,6 +30,9 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertMembershipApplicationSchema = createInsertSchema(membershipApplications).omit({
   id: true,
   submittedAt: true,
+  status: true,
+  reviewedAt: true,
+  reviewedBy: true,
 }).extend({
   name: z.string().min(1, "Name is required"),
   company: z.string().min(1, "Company is required"),
@@ -35,7 +41,13 @@ export const insertMembershipApplicationSchema = createInsertSchema(membershipAp
   consent: z.boolean().refine((val) => val === true, "Consent is required"),
 });
 
+export const updateApplicationStatusSchema = z.object({
+  status: z.enum(["pending", "accepted", "rejected"]),
+  reviewedBy: z.string().min(1, "Reviewer is required"),
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertMembershipApplication = z.infer<typeof insertMembershipApplicationSchema>;
 export type MembershipApplication = typeof membershipApplications.$inferSelect;
+export type UpdateApplicationStatus = z.infer<typeof updateApplicationStatusSchema>;

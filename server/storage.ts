@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type MembershipApplication, type InsertMembershipApplication } from "@shared/schema";
+import { type User, type InsertUser, type MembershipApplication, type InsertMembershipApplication, type UpdateApplicationStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 // modify the interface with any CRUD methods
@@ -10,6 +10,9 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   createMembershipApplication(application: InsertMembershipApplication): Promise<MembershipApplication>;
   getMembershipApplications(): Promise<MembershipApplication[]>;
+  getPendingApplications(): Promise<MembershipApplication[]>;
+  getAcceptedApplications(): Promise<MembershipApplication[]>;
+  updateApplicationStatus(id: string, update: UpdateApplicationStatus): Promise<MembershipApplication | undefined>;
 }
 
 export class MemStorage implements IStorage {
@@ -43,7 +46,10 @@ export class MemStorage implements IStorage {
     const application: MembershipApplication = {
       ...insertApplication,
       id,
+      status: "pending",
       submittedAt: new Date(),
+      reviewedAt: null,
+      reviewedBy: null,
     };
     this.membershipApplications.set(id, application);
     return application;
@@ -51,6 +57,35 @@ export class MemStorage implements IStorage {
 
   async getMembershipApplications(): Promise<MembershipApplication[]> {
     return Array.from(this.membershipApplications.values());
+  }
+
+  async getPendingApplications(): Promise<MembershipApplication[]> {
+    return Array.from(this.membershipApplications.values()).filter(
+      (app) => app.status === "pending"
+    );
+  }
+
+  async getAcceptedApplications(): Promise<MembershipApplication[]> {
+    return Array.from(this.membershipApplications.values()).filter(
+      (app) => app.status === "accepted"
+    );
+  }
+
+  async updateApplicationStatus(id: string, update: UpdateApplicationStatus): Promise<MembershipApplication | undefined> {
+    const application = this.membershipApplications.get(id);
+    if (!application) {
+      return undefined;
+    }
+
+    const updatedApplication: MembershipApplication = {
+      ...application,
+      status: update.status,
+      reviewedAt: new Date(),
+      reviewedBy: update.reviewedBy,
+    };
+
+    this.membershipApplications.set(id, updatedApplication);
+    return updatedApplication;
   }
 }
 
