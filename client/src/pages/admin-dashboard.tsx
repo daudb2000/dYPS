@@ -202,7 +202,7 @@ export default function AdminDashboard() {
                             <div>
                               <h3 className="font-semibold text-lg">{application.name}</h3>
                               <p className="text-sm text-muted-foreground">
-                                Accepted: {new Date(application.updatedAt).toLocaleDateString()}
+                                Accepted: {new Date(application.reviewedAt || application.submittedAt).toLocaleDateString()}
                               </p>
                             </div>
                             <div>

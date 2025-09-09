@@ -8,6 +8,7 @@ import DataRetention from "@/pages/data-retention";
 import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminAccepted from "@/pages/admin-accepted";
+import AdminBacklog from "@/pages/admin-backlog";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/accepted" component={AdminAccepted} />
+      <Route path="/admin/backlog" component={AdminBacklog} />
       <Route component={NotFound} />
     </Switch>
   );
