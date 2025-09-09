@@ -79,27 +79,22 @@ export default function Home() {
             The Deals Young Professional Society (DYPS) is a Manchester based referral-only society dedicated to fostering professional relationships and knowledge exchange among young practitioners in the small to mid-market corporate transaction sector.
           </p>
           
-          <div className="flex flex-col items-center space-y-4">
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex items-center gap-3">
-                <span className="text-sm text-muted-foreground mr-2">A space for</span>
-              </div>
-              
-              {/* First row - 2 roles aligned with second row */}
-              <div className="flex gap-3 self-center" style={{ marginLeft: '80px' }}>
-                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
-                  Corporate Financiers
-                </span>
-                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
-                  Venture Capitalists
-                </span>
-              </div>
-            </div>
-            
-            {/* Second row - 3 roles with closing text */}
-            <div className="flex items-center gap-3 self-center overflow-visible" style={{ marginLeft: '80px' }}>
+          <div className="flex flex-col items-center space-y-4 overflow-visible">
+            {/* First row - Corporate Financiers and Private Equity horizontally aligned */}
+            <div className="flex items-center gap-3 overflow-visible">
+              <span className="text-sm text-muted-foreground mr-2 whitespace-nowrap">A space for</span>
+              <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                Corporate Financiers
+              </span>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Private Equity
+              </span>
+            </div>
+            
+            {/* Second row - 3 roles with closing text, aligned to start under Corporate Financiers */}
+            <div className="flex items-center gap-3 self-center overflow-visible" style={{ marginLeft: '80px' }}>
+              <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                Venture Capitalists
               </span>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Corporate Lawyers
