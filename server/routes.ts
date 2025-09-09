@@ -1,4 +1,5 @@
 import type { Express, Request, Response } from "express";
+import session from "express-session";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
@@ -14,6 +15,16 @@ declare module 'express-session' {
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup session middleware
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false, // Set to true in production with HTTPS
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
   // POST /api/membership-applications - Submit membership application
   app.post("/api/membership-applications", async (req, res) => {
     try {
