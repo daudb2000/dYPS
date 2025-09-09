@@ -89,9 +89,6 @@ export default function Home() {
                   Corporate Financiers
                 </span>
                 <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
-                  Investment Bankers
-                </span>
-                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                   Venture Capitalists
                 </span>
               </div>
@@ -108,11 +105,6 @@ export default function Home() {
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Transaction Services
               </span>
-            </div>
-            
-            {/* Large horizontal dark purple bubble */}
-            <div className="px-8 py-3 bg-purple-800 text-purple-100 rounded-xl text-sm font-medium shadow-lg w-80 text-center">
-              and ambitious professionals
             </div>
           </div>
         </div>
