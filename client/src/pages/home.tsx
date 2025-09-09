@@ -61,14 +61,19 @@ export default function Home() {
         
         {/* Logo Section */}
         <div className="text-center">
-          <div className="inline-block p-8 border-2 border-dashed border-border rounded-lg">
-            <span className="ft-serif text-2xl font-bold text-muted-foreground">LOGO</span>
+          <div className="inline-block">
+            <img 
+              src="@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448115347.jpeg" 
+              alt="Deals Young Professional Society Logo" 
+              className="h-20 w-auto mx-auto"
+              data-testid="logo-image"
+            />
           </div>
         </div>
 
         {/* Descriptive Text */}
         <div className="text-center space-y-4">
-          <h1 className="ft-serif text-3xl md:text-4xl font-bold text-foreground leading-tight" style={{fontStyle: 'normal'}}>
+          <h1 className="ft-serif-straight text-3xl md:text-4xl text-foreground leading-tight">
             Deals Young Professional Society
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">

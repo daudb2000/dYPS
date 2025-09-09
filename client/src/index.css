@@ -160,6 +160,13 @@
 
 .ft-serif {
   font-family: 'Regime', Georgia, 'Times New Roman', serif;
+  font-style: normal !important;
+}
+
+.ft-serif-straight {
+  font-family: 'Regime', Georgia, 'Times New Roman', serif;
+  font-style: normal !important;
+  font-weight: 700;
 }
 
 .form-field {
