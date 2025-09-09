@@ -95,7 +95,7 @@ export default function Home() {
             </div>
             
             {/* Second row - 3 roles with closing text */}
-            <div className="flex items-center gap-3 self-center" style={{ marginLeft: '80px' }}>
+            <div className="flex items-center gap-3 self-center overflow-visible" style={{ marginLeft: '80px' }}>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Private Equity
               </span>
@@ -105,7 +105,7 @@ export default function Home() {
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Transaction Services
               </span>
-              <span className="text-sm text-muted-foreground ml-2"> to foster key relationships</span>
+              <span className="text-sm text-muted-foreground ml-2 whitespace-nowrap"> to foster key relationships</span>
             </div>
           </div>
         </div>
