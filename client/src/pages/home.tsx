@@ -236,7 +236,7 @@ export default function Home() {
                 <Button
                   type="submit"
                   disabled={submitApplication.isPending}
-                  className="btn-submit w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-6 rounded-md transition-all duration-200"
+                  className="btn-submit w-full bg-amber-900 hover:bg-amber-800 text-white font-medium py-3 px-6 rounded-md transition-all duration-200 shadow-lg hover:shadow-xl"
                   data-testid="button-submit"
                 >
                   {submitApplication.isPending ? "Submitting..." : "Submit Application"}
