@@ -220,7 +220,7 @@ export default function Home() {
                     className="mt-1"
                     data-testid="checkbox-consent"
                   />
-                  <Label htmlFor="consent" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
+                  <Label htmlFor="consent" className="text-sm text-amber-900 leading-relaxed cursor-pointer">
                     I consent to being contacted regarding my membership application status
                   </Label>
                 </div>
@@ -250,7 +250,7 @@ export default function Home() {
                 By submitting this form, you agree to our{" "}
                 <a 
                   href="#" 
-                  className="link-policy text-primary hover:underline transition-all duration-200"
+                  className="link-policy text-amber-900 hover:text-amber-800 hover:underline transition-all duration-200"
                   data-testid="link-data-policy"
                 >
                   Data Retention Policy
