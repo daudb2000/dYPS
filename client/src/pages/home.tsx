@@ -83,8 +83,8 @@ export default function Home() {
             <div className="flex items-center flex-wrap justify-center gap-3">
               <span className="text-sm text-muted-foreground mr-2">A space for</span>
               
-              {/* First row - 3 roles */}
-              <div className="flex gap-3">
+              {/* First row - 2 roles */}
+              <div className="flex gap-3" style={{ marginLeft: '-20px' }}>
                 <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                   Corporate Financiers
                 </span>
@@ -95,7 +95,7 @@ export default function Home() {
             </div>
             
             {/* Second row - 3 roles, aligned to start of "Venture" */}
-            <div className="flex gap-3 self-center" style={{ marginLeft: '120px' }}>
+            <div className="flex gap-3 self-center" style={{ marginLeft: '80px' }}>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Private Equity
               </span>
@@ -105,6 +105,11 @@ export default function Home() {
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Transaction Services
               </span>
+            </div>
+            
+            {/* Closing text */}
+            <div className="text-center">
+              <span className="text-sm text-muted-foreground"> to foster key relationships</span>
             </div>
           </div>
         </div>
