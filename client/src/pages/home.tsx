@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import logoImage from "@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448294978.jpeg";
 
 export default function Home() {
   const { toast } = useToast();
@@ -85,7 +86,7 @@ export default function Home() {
         <div className="text-center">
           <div className="inline-block">
             <img 
-              src="@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757448294978.jpeg" 
+              src={logoImage} 
               alt="Deals Young Professional Society Logo" 
               className="h-24 w-24 mx-auto object-cover object-top rounded-lg shadow-md"
               data-testid="logo-image"
