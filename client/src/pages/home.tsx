@@ -14,7 +14,6 @@ import logoImage from "@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c_1757
 
 export default function Home() {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [designVariant, setDesignVariant] = useState<'background' | 'header'>('background');
 
   const form = useForm<InsertMembershipApplication>({
@@ -39,21 +38,18 @@ export default function Home() {
         description: "We will be in touch soon regarding your membership application.",
       });
       form.reset();
-      setIsSubmitting(false);
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Submission error:", error);
       toast({
         title: "Submission Failed",
         description: "Please check your information and try again.",
         variant: "destructive",
       });
-      setIsSubmitting(false);
     },
   });
 
   const onSubmit = (data: InsertMembershipApplication) => {
-    setIsSubmitting(true);
     submitApplication.mutate(data);
   };
 
@@ -241,11 +237,11 @@ export default function Home() {
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={submitApplication.isPending}
                   className="btn-submit w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-6 rounded-md transition-all duration-200"
                   data-testid="button-submit"
                 >
-                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                  {submitApplication.isPending ? "Submitting..." : "Submit Application"}
                 </Button>
               </div>
             </form>
