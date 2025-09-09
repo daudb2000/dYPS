@@ -76,7 +76,7 @@ export default function Home() {
         </Button>
       </div>
       
-      <div className="max-w-2xl w-full space-y-12">
+      <div className="max-w-2xl w-full space-y-8">
         
         {/* Logo Section */}
         <div className="text-center">
@@ -90,15 +90,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Descriptive Text */}
-        <div className="text-center space-y-6">
+        {/* Title and Description */}
+        <div className="text-center space-y-4">
           <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
-        </div>
-
-        {/* DYPS Description */}
-        <div className="text-center space-y-6">
           <p className={`text-base leading-relaxed max-w-2xl mx-auto ${
             designVariant === 'background' 
               ? 'text-slate-300' 
