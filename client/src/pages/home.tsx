@@ -56,8 +56,8 @@ export default function Home() {
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center px-4 py-8 ${
       designVariant === 'background' 
-        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900' 
-        : 'bg-background'
+        ? 'bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50' 
+        : 'bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50'
     }`}>
       {/* Design Toggle */}
       <div className="fixed top-4 right-4 z-10">
@@ -67,8 +67,8 @@ export default function Home() {
           size="sm"
           className={`${
             designVariant === 'background' 
-              ? 'bg-white/10 text-white border-white/20 hover:bg-white/20' 
-              : 'bg-background text-foreground'
+              ? 'bg-white/20 text-slate-800 border-slate-300 hover:bg-white/30' 
+              : 'bg-white/20 text-slate-800 border-slate-300 hover:bg-white/30'
           }`}
           data-testid="toggle-design"
         >
@@ -76,7 +76,7 @@ export default function Home() {
         </Button>
       </div>
       
-      <div className="max-w-lg w-full space-y-8">
+      <div className="max-w-2xl w-full space-y-8">
         
         {/* Logo Section */}
         <div className="text-center">
@@ -92,42 +92,22 @@ export default function Home() {
 
         {/* Descriptive Text */}
         <div className="text-center space-y-4">
-          <h1 className={`ft-serif-straight text-3xl md:text-4xl leading-tight whitespace-nowrap ${
-            designVariant === 'background' 
-              ? 'text-white' 
-              : 'text-transparent bg-gradient-to-r from-slate-900 via-blue-800 to-slate-700 bg-clip-text font-black'
-          }`}>
+          <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
-          <p className={`text-lg leading-relaxed max-w-md mx-auto ${
-            designVariant === 'background' 
-              ? 'text-slate-200' 
-              : 'text-muted-foreground'
-          }`}>
+          <p className="text-lg leading-relaxed max-w-2xl mx-auto text-slate-700">
             An exclusive network connecting the next generation of deal-makers, 
             investment professionals, and industry leaders across finance and business.
           </p>
-          <p className={`text-base ${
-            designVariant === 'background' 
-              ? 'text-slate-300' 
-              : 'text-muted-foreground'
-          }`}>
+          <p className="text-base text-slate-600">
             Join our community of ambitious professionals shaping the future of finance.
           </p>
         </div>
 
         {/* Membership Form */}
-        <Card className={`${
-          designVariant === 'background' 
-            ? 'bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl' 
-            : 'bg-card border border-border shadow-sm'
-        }`}>
+        <Card className="bg-white/95 backdrop-blur-sm border border-slate-200 shadow-xl">
           <CardContent className="p-8">
-            <h2 className={`ft-serif text-xl font-semibold mb-6 text-center ${
-              designVariant === 'background' 
-                ? 'text-slate-900' 
-                : 'text-card-foreground'
-            }`}>
+            <h2 className="ft-serif text-xl font-semibold mb-6 text-center text-slate-900">
               Apply for Membership
             </h2>
             
