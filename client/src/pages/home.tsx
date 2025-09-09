@@ -95,24 +95,9 @@ export default function Home() {
           <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
-          <p className={`text-lg leading-relaxed max-w-2xl mx-auto ${
-            designVariant === 'background' 
-              ? 'text-slate-200' 
-              : 'text-muted-foreground'
-          }`}>
-            An exclusive network connecting the next generation of deal-makers, 
-            investment professionals, and industry leaders across finance and business.
-          </p>
-          <p className={`text-base ${
-            designVariant === 'background' 
-              ? 'text-slate-300' 
-              : 'text-muted-foreground'
-          }`}>
-            Join our community of ambitious professionals shaping the future of finance.
-          </p>
         </div>
 
-        {/* Additional Description */}
+        {/* DYPS Description */}
         <div className="text-center space-y-6">
           <p className={`text-base leading-relaxed max-w-2xl mx-auto ${
             designVariant === 'background' 
