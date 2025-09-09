@@ -76,7 +76,7 @@ export default function Home() {
         </Button>
       </div>
       
-      <div className="max-w-2xl w-full space-y-8">
+      <div className="max-w-2xl w-full space-y-12">
         
         {/* Logo Section */}
         <div className="text-center">
@@ -84,14 +84,14 @@ export default function Home() {
             <img 
               src={dypsImage} 
               alt="DYPS" 
-              className="h-20 w-auto object-contain"
+              className="h-32 w-auto object-contain"
               data-testid="dyps-logo"
             />
           </div>
         </div>
 
         {/* Descriptive Text */}
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-6">
           <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
@@ -114,7 +114,7 @@ export default function Home() {
       </div>
 
       {/* Membership Form - Narrower Section */}
-      <div className="max-w-lg w-full">
+      <div className="max-w-lg w-full mt-16">
         <Card className={`${
           designVariant === 'background' 
             ? 'bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl' 
