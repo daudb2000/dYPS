@@ -14,7 +14,6 @@ import dypsImage from "@assets/092FBE56-12B6-4789-91A0-21B03FFCB0C3_1_105_c copy
 
 export default function Home() {
   const { toast } = useToast();
-  const [designVariant, setDesignVariant] = useState<'background' | 'header'>('background');
 
   const form = useForm<InsertMembershipApplication>({
     resolver: zodResolver(insertMembershipApplicationSchema),
@@ -54,27 +53,7 @@ export default function Home() {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center px-4 py-8 ${
-      designVariant === 'background' 
-        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900' 
-        : 'bg-background'
-    }`}>
-      {/* Design Toggle */}
-      <div className="fixed top-4 right-4 z-10">
-        <Button
-          onClick={() => setDesignVariant(designVariant === 'background' ? 'header' : 'background')}
-          variant="outline"
-          size="sm"
-          className={`${
-            designVariant === 'background' 
-              ? 'bg-white/10 text-white border-white/20 hover:bg-white/20' 
-              : 'bg-background text-foreground'
-          }`}
-          data-testid="toggle-design"
-        >
-          {designVariant === 'background' ? 'Light Version' : 'Dark Version'}
-        </Button>
-      </div>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900">
       
       <div className="max-w-2xl w-full space-y-8">
         
@@ -95,19 +74,11 @@ export default function Home() {
           <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
-          <p className={`text-base leading-relaxed max-w-2xl mx-auto ${
-            designVariant === 'background' 
-              ? 'text-slate-300' 
-              : 'text-muted-foreground'
-          }`}>
+          <p className="text-base leading-relaxed max-w-2xl mx-auto text-slate-300">
             The Deals Young Professional Society (DYPS) is a Manchester based referral-only society dedicated to fostering professional relationships and knowledge exchange among young practitioners in the small to mid-market corporate transaction sector.
           </p>
           
-          <p className={`text-sm ${
-            designVariant === 'background' 
-              ? 'text-slate-400' 
-              : 'text-muted-foreground'
-          }`}>
+          <p className="text-sm text-slate-400">
             We target Corporate Financiers, Investment Bankers, Venture Capitalists, Private Equity professionals, Corporate Lawyers, and Transaction Services specialists.
           </p>
         </div>
@@ -115,17 +86,9 @@ export default function Home() {
 
       {/* Membership Form - Narrower Section */}
       <div className="max-w-lg w-full mt-16">
-        <Card className={`${
-          designVariant === 'background' 
-            ? 'bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl' 
-            : 'bg-card border border-border shadow-sm'
-        }`}>
+        <Card className="bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl">
           <CardContent className="p-8">
-            <h2 className={`ft-serif text-xl font-semibold mb-6 text-center ${
-              designVariant === 'background' 
-                ? 'text-slate-900' 
-                : 'text-card-foreground'
-            }`}>
+            <h2 className="ft-serif text-xl font-semibold mb-6 text-center text-slate-900">
               Apply for Membership
             </h2>
             
