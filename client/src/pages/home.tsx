@@ -53,7 +53,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background">
       
       <div className="max-w-2xl w-full space-y-8">
         
@@ -74,11 +74,11 @@ export default function Home() {
           <h1 className="ft-serif-straight text-3xl md:text-4xl leading-tight font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-blue-800 via-purple-700 to-slate-900 bg-[length:200%_100%] animate-gradient">
             Deals Young Professional Society
           </h1>
-          <p className="text-base leading-relaxed max-w-2xl mx-auto text-slate-300">
+          <p className="text-base leading-relaxed max-w-2xl mx-auto text-muted-foreground">
             The Deals Young Professional Society (DYPS) is a Manchester based referral-only society dedicated to fostering professional relationships and knowledge exchange among young practitioners in the small to mid-market corporate transaction sector.
           </p>
           
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-muted-foreground">
             We target Corporate Financiers, Investment Bankers, Venture Capitalists, Private Equity professionals, Corporate Lawyers, and Transaction Services specialists.
           </p>
         </div>
@@ -86,9 +86,9 @@ export default function Home() {
 
       {/* Membership Form - Narrower Section */}
       <div className="max-w-lg w-full mt-16">
-        <Card className="bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl">
+        <Card className="bg-card border border-border shadow-sm">
           <CardContent className="p-8">
-            <h2 className="ft-serif text-xl font-semibold mb-6 text-center text-slate-900">
+            <h2 className="ft-serif text-xl font-semibold mb-6 text-center text-card-foreground">
               Apply for Membership
             </h2>
             
