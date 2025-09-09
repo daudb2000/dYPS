@@ -14,6 +14,7 @@ import { apiRequest } from "@/lib/queryClient";
 export default function Home() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [designVariant, setDesignVariant] = useState<'background' | 'header'>('background');
 
   const form = useForm<InsertMembershipApplication>({
     resolver: zodResolver(insertMembershipApplicationSchema),
@@ -56,7 +57,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 bg-background">
+    <div className={`min-h-screen flex flex-col items-center justify-center px-4 py-8 ${
+      designVariant === 'background' 
+        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900' 
+        : 'bg-background'
+    }`}>
+      {/* Design Toggle */}
+      <div className="fixed top-4 right-4 z-10">
+        <Button
+          onClick={() => setDesignVariant(designVariant === 'background' ? 'header' : 'background')}
+          variant="outline"
+          size="sm"
+          className={`${
+            designVariant === 'background' 
+              ? 'bg-white/10 text-white border-white/20 hover:bg-white/20' 
+              : 'bg-background text-foreground'
+          }`}
+          data-testid="toggle-design"
+        >
+          {designVariant === 'background' ? 'Light Version' : 'Dark Version'}
+        </Button>
+      </div>
+      
       <div className="max-w-lg w-full space-y-8">
         
         {/* Logo Section */}
@@ -73,22 +95,42 @@ export default function Home() {
 
         {/* Descriptive Text */}
         <div className="text-center space-y-4">
-          <h1 className="ft-serif-straight text-3xl md:text-4xl text-foreground leading-tight">
+          <h1 className={`ft-serif-straight text-3xl md:text-4xl leading-tight ${
+            designVariant === 'background' 
+              ? 'text-white' 
+              : 'text-transparent bg-gradient-to-r from-slate-900 via-blue-800 to-slate-700 bg-clip-text font-black'
+          }`}>
             Deals Young Professional Society
           </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
+          <p className={`text-lg leading-relaxed max-w-md mx-auto ${
+            designVariant === 'background' 
+              ? 'text-slate-200' 
+              : 'text-muted-foreground'
+          }`}>
             An exclusive network connecting the next generation of deal-makers, 
             investment professionals, and industry leaders across finance and business.
           </p>
-          <p className="text-base text-muted-foreground">
+          <p className={`text-base ${
+            designVariant === 'background' 
+              ? 'text-slate-300' 
+              : 'text-muted-foreground'
+          }`}>
             Join our community of ambitious professionals shaping the future of finance.
           </p>
         </div>
 
         {/* Membership Form */}
-        <Card className="bg-card border border-border shadow-sm">
+        <Card className={`${
+          designVariant === 'background' 
+            ? 'bg-white/95 backdrop-blur-sm border border-white/20 shadow-2xl' 
+            : 'bg-card border border-border shadow-sm'
+        }`}>
           <CardContent className="p-8">
-            <h2 className="ft-serif text-xl font-semibold text-card-foreground mb-6 text-center">
+            <h2 className={`ft-serif text-xl font-semibold mb-6 text-center ${
+              designVariant === 'background' 
+                ? 'text-slate-900' 
+                : 'text-card-foreground'
+            }`}>
               Apply for Membership
             </h2>
             
