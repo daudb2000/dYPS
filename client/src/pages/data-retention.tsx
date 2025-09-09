@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 
 export default function DataRetention() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-background py-16 px-4">
       <div className="max-w-4xl mx-auto">
