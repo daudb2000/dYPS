@@ -81,7 +81,7 @@ export default function Home() {
           
           <div className="flex flex-col items-center space-y-4 overflow-visible">
             {/* First row - Corporate Financiers and Private Equity horizontally aligned */}
-            <div className="flex items-center gap-3 overflow-visible self-start">
+            <div className="flex items-center gap-3 overflow-visible self-start" style={{ marginLeft: '-20px' }}>
               <span className="text-sm text-muted-foreground mr-2 whitespace-nowrap">A space for</span>
               <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
                 Corporate Financiers
