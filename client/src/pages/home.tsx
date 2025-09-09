@@ -79,9 +79,42 @@ export default function Home() {
             The Deals Young Professional Society (DYPS) is a Manchester based referral-only society dedicated to fostering professional relationships and knowledge exchange among young practitioners in the small to mid-market corporate transaction sector.
           </p>
           
-          <p className="text-sm text-muted-foreground">
-            We target Corporate Financiers, Investment Bankers, Venture Capitalists, Private Equity professionals, Corporate Lawyers, and Transaction Services specialists.
-          </p>
+          <div className="flex flex-col items-center space-y-4">
+            <div className="flex items-center flex-wrap justify-center gap-3">
+              <span className="text-sm text-muted-foreground mr-2">A space for</span>
+              
+              {/* First row - 3 roles */}
+              <div className="flex gap-3">
+                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                  Corporate Financiers
+                </span>
+                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                  Investment Bankers
+                </span>
+                <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                  Venture Capitalists
+                </span>
+              </div>
+            </div>
+            
+            {/* Second row - 3 roles, aligned to start of "Venture" */}
+            <div className="flex gap-3 self-center" style={{ marginLeft: '120px' }}>
+              <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                Private Equity
+              </span>
+              <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                Corporate Lawyers
+              </span>
+              <span className="px-4 py-2 bg-amber-50 text-amber-900 rounded-lg text-sm font-medium shadow-sm">
+                Transaction Services
+              </span>
+            </div>
+            
+            {/* Large horizontal dark purple bubble */}
+            <div className="px-8 py-3 bg-purple-800 text-purple-100 rounded-xl text-sm font-medium shadow-lg w-80 text-center">
+              and ambitious professionals
+            </div>
+          </div>
         </div>
       </div>
 
