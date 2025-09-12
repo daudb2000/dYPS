@@ -96,51 +96,51 @@ export default function AdminBacklog() {
 
           {!allApplications.length ? (
             <Card>
-              <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground">No applications found</p>
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground text-sm">No applications found</p>
               </CardContent>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
               {allApplications.map((application) => (
                 <Dialog key={application.id}>
                   <DialogTrigger asChild>
                     <Card 
-                      className={`cursor-pointer hover:shadow-lg transition-shadow ${getStatusColor(application.status)} border-2`}
+                      className={`cursor-pointer hover:shadow-md transition-shadow ${getStatusColor(application.status)} border`}
                       data-testid={`card-application-${application.id}`}
                     >
-                      <CardContent className="p-4">
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-semibold text-lg truncate">
+                      <CardContent className="p-3">
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between gap-1">
+                            <h3 className="font-medium text-sm truncate leading-tight">
                               {application.name}
                             </h3>
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1 flex-shrink-0">
                               {getStatusIcon(application.status)}
                             </div>
                           </div>
                           
-                          <div className="space-y-2">
+                          <div className="space-y-1">
                             <div>
-                              <p className="font-medium truncate">{application.company}</p>
-                              <p className="text-sm text-muted-foreground">Company</p>
+                              <p className="font-medium text-xs truncate">{application.company}</p>
+                              <p className="text-xs text-muted-foreground">Company</p>
                             </div>
                             
                             <div>
-                              <p className="font-medium truncate">{application.role}</p>
-                              <p className="text-sm text-muted-foreground">Role</p>
+                              <p className="font-medium text-xs truncate">{application.role}</p>
+                              <p className="text-xs text-muted-foreground">Role</p>
                             </div>
                           </div>
                           
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between gap-1">
                             <Badge 
                               variant="outline" 
-                              className={`${getStatusColor(application.status)} border`}
+                              className={`${getStatusColor(application.status)} border text-xs px-1 py-0`}
                             >
                               {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
                             </Badge>
                             <p className="text-xs text-muted-foreground">
-                              Click for details
+                              Details
                             </p>
                           </div>
                         </div>
