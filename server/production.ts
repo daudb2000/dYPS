@@ -15,14 +15,26 @@ function log(message: string, source = "express") {
 }
 
 function serveStatic(app: express.Express) {
-  const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+  // In Railway, the working directory is /app and dist is at /app/dist/public
+  const distPath = path.resolve(process.cwd(), "dist", "public");
 
   if (!fs.existsSync(distPath)) {
+    // Try alternative path structure
+    const altPath = path.resolve(process.cwd(), "public");
+    if (fs.existsSync(altPath)) {
+      log(`Using alternative static path: ${altPath}`);
+      app.use(express.static(altPath));
+      app.use("*", (_req, res) => {
+        res.sendFile(path.resolve(altPath, "index.html"));
+      });
+      return;
+    }
     throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+      `Could not find the build directory: ${distPath} or ${altPath}. Available files: ${fs.readdirSync(process.cwd()).join(", ")}`,
     );
   }
 
+  log(`Serving static files from: ${distPath}`);
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
