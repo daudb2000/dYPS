@@ -241,8 +241,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const status = {
         emailServiceLoaded: typeof sendApplicationNotification === 'function',
-        testEmailConnection: typeof testEmailConnection === 'function',
-        emailjsPackage: '@emailjs/nodejs' in require('module')._cache || 'unknown',
+        testEmailConnectionLoaded: typeof testEmailConnection === 'function',
         environment: {
           nodeEnv: process.env.NODE_ENV,
           emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY ? 'SET' : 'NOT_SET',
