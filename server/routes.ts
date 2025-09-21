@@ -234,6 +234,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // GET /api/email-service-status - Check email service status (public)
+  app.get("/api/email-service-status", async (req, res) => {
+    try {
+      console.log('🔍 Email service status check requested');
+
+      const status = {
+        emailServiceLoaded: typeof sendApplicationNotification === 'function',
+        testEmailConnection: typeof testEmailConnection === 'function',
+        emailjsPackage: '@emailjs/nodejs' in require('module')._cache || 'unknown',
+        environment: {
+          nodeEnv: process.env.NODE_ENV,
+          emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY ? 'SET' : 'NOT_SET',
+          formspreeEndpoint: process.env.FORMSPREE_ENDPOINT ? 'SET' : 'NOT_SET',
+          testEmailOverride: process.env.TEST_EMAIL_OVERRIDE ? 'SET' : 'NOT_SET'
+        }
+      };
+
+      console.log('📊 Email service status:', JSON.stringify(status, null, 2));
+      res.json({ success: true, status });
+    } catch (error) {
+      console.error('❌ Email service status check failed:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Status check failed',
+        error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
