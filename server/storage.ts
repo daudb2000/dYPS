@@ -96,4 +96,8 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { SqliteStorage } from "./sqliteStorage";
+
+export const storage = process.env.NODE_ENV === 'production'
+  ? new SqliteStorage('/app/dyps.db')  // Railway persistent storage path
+  : new MemStorage();  // Keep memory storage for local development
