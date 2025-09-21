@@ -481,12 +481,12 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="text-center">
-                    <p className="text-amber-300 font-medium mb-2">Alkesh Monja ACCA</p>
+                    <p className="text-amber-300 font-medium mb-2">Alkesh Monji ACCA</p>
                     <p className="text-amber-100 text-sm mb-2">Co-Chair</p>
                     <div className="flex items-center justify-center gap-2">
-                      <span className="text-amber-300 text-xs">alkesh.monja@example.com</span>
+                      <span className="text-amber-300 text-xs">alkesh@dyps.uk</span>
                       <a
-                        href="mailto:alkesh.monja@example.com"
+                        href="mailto:alkesh@dyps.uk"
                         className="text-amber-300 hover:text-amber-200 transition-colors"
                         title="Send email to Alkesh"
                       >
@@ -498,9 +498,9 @@ export default function Home() {
                     <p className="text-amber-300 font-medium mb-2">Daud Bhatti, ACSI</p>
                     <p className="text-amber-100 text-sm mb-2">Co-Chair</p>
                     <div className="flex items-center justify-center gap-2">
-                      <span className="text-amber-300 text-xs">daud.bhatti@mavencp.com</span>
+                      <span className="text-amber-300 text-xs">daud@dyps.uk</span>
                       <a
-                        href="mailto:daud.bhatti@mavencp.com"
+                        href="mailto:daud@dyps.uk"
                         className="text-amber-300 hover:text-amber-200 transition-colors"
                         title="Send email to Daud"
                       >
@@ -513,9 +513,9 @@ export default function Home() {
                   <p className="text-amber-300 font-medium mb-2">Max Conder</p>
                   <p className="text-amber-100 text-sm mb-2">Committee Member</p>
                   <div className="flex items-center justify-center gap-2">
-                    <span className="text-amber-300 text-xs">max.conder@example.com</span>
+                    <span className="text-amber-300 text-xs">max@dyps.uk</span>
                     <a
-                      href="mailto:max.conder@example.com"
+                      href="mailto:max@dyps.uk"
                       className="text-amber-300 hover:text-amber-200 transition-colors"
                       title="Send email to Max"
                     >
