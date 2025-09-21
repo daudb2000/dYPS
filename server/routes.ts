@@ -41,7 +41,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const application = await storage.createMembershipApplication(validatedData);
       
       // Send email notification (non-blocking)
-      sendApplicationNotification(application).catch(console.error);
+      console.log('🔧 About to call sendApplicationNotification for:', application.name);
+      try {
+        await sendApplicationNotification(application);
+        console.log('✅ Email notification completed successfully');
+      } catch (error) {
+        console.error('❌ Email notification failed:', error);
+      }
       
       res.json({ success: true, application });
     } catch (error) {
