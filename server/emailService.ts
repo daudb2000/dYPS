@@ -13,12 +13,17 @@ const createTransporter = () => {
 };
 
 export const sendApplicationNotification = async (application: MembershipApplication) => {
+  console.log('🔧 Email service called for application:', application.name);
+
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.log('Email configuration missing, skipping email notification');
+    console.error('❌ Email configuration missing:');
+    console.error('EMAIL_USER:', process.env.EMAIL_USER ? '✓ Set' : '❌ Missing');
+    console.error('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD ? '✓ Set' : '❌ Missing');
     return;
   }
 
   try {
+    console.log('📧 Creating email transporter...');
     const transporter = createTransporter();
 
     // Use test email override if provided, otherwise use DYPS emails
@@ -29,6 +34,8 @@ export const sendApplicationNotification = async (application: MembershipApplica
           'alkesh@dyps.uk',
           'max@dyps.uk'
         ];
+
+    console.log('📬 Email recipients:', recipients);
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -155,9 +162,15 @@ export const sendApplicationNotification = async (application: MembershipApplica
       `,
     };
 
+    console.log('📤 Sending email...');
     await transporter.sendMail(mailOptions);
-    console.log('Application notification sent successfully');
+    console.log('✅ Application notification sent successfully to:', recipients.join(', '));
   } catch (error) {
-    console.error('Failed to send email notification:', error);
+    console.error('❌ Failed to send email notification:');
+    console.error('Error details:', error);
+    if (error instanceof Error) {
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
   }
 };

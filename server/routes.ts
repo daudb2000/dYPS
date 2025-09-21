@@ -160,9 +160,55 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const applications = await storage.getMembershipApplications();
       res.json({ success: true, applications });
     } catch (error) {
-      res.status(500).json({ 
-        success: false, 
-        message: "Internal server error" 
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  });
+
+  // POST /api/admin/test-email - Test email configuration
+  app.post("/api/admin/test-email", requireAdmin, async (req, res) => {
+    try {
+      console.log('🔧 Testing email configuration...');
+
+      // Create a test application
+      const testApplication = {
+        id: 'test-id',
+        name: 'Test User',
+        email: 'test@example.com',
+        company: 'Test Company',
+        role: 'Test Role',
+        linkedin: 'https://linkedin.com/in/test',
+        status: 'pending' as const,
+        submittedAt: new Date(),
+        reviewedAt: null,
+        reviewedBy: null
+      };
+
+      // Try to send test email
+      await sendApplicationNotification(testApplication);
+
+      res.json({
+        success: true,
+        message: "Test email sent successfully. Check Railway logs for details.",
+        environment: {
+          emailUser: process.env.EMAIL_USER ? '✓ Set' : '❌ Missing',
+          emailPassword: process.env.EMAIL_PASSWORD ? '✓ Set' : '❌ Missing',
+          nodeEnv: process.env.NODE_ENV
+        }
+      });
+    } catch (error) {
+      console.error('❌ Test email failed:', error);
+      res.status(500).json({
+        success: false,
+        message: "Test email failed",
+        error: error instanceof Error ? error.message : String(error),
+        environment: {
+          emailUser: process.env.EMAIL_USER ? '✓ Set' : '❌ Missing',
+          emailPassword: process.env.EMAIL_PASSWORD ? '✓ Set' : '❌ Missing',
+          nodeEnv: process.env.NODE_ENV
+        }
       });
     }
   });
