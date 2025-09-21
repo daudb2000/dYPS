@@ -12,6 +12,7 @@ export interface IStorage {
   getMembershipApplications(): Promise<MembershipApplication[]>;
   getPendingApplications(): Promise<MembershipApplication[]>;
   getAcceptedApplications(): Promise<MembershipApplication[]>;
+  getRejectedApplications(): Promise<MembershipApplication[]>;
   updateApplicationStatus(id: string, update: UpdateApplicationStatus): Promise<MembershipApplication | undefined>;
 }
 
@@ -68,6 +69,12 @@ export class MemStorage implements IStorage {
   async getAcceptedApplications(): Promise<MembershipApplication[]> {
     return Array.from(this.membershipApplications.values()).filter(
       (app) => app.status === "accepted"
+    );
+  }
+
+  async getRejectedApplications(): Promise<MembershipApplication[]> {
+    return Array.from(this.membershipApplications.values()).filter(
+      (app) => app.status === "rejected"
     );
   }
 

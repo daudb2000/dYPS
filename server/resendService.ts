@@ -1,26 +1,16 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import type { MembershipApplication } from '@shared/schema';
 
-// Create transporter using Gmail SMTP (free)
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER, // Gmail address
-      pass: process.env.EMAIL_PASSWORD, // Gmail app password (not regular password)
-    },
-  });
-};
+// Only initialize Resend if API key is available
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 export const sendApplicationNotification = async (application: MembershipApplication) => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.log('Email configuration missing, skipping email notification');
+  if (!process.env.RESEND_API_KEY || !resend) {
+    console.log('Resend API key missing, skipping email notification');
     return;
   }
 
   try {
-    const transporter = createTransporter();
-
     // Use test email override if provided, otherwise use DYPS emails
     const recipients = process.env.TEST_EMAIL_OVERRIDE
       ? [process.env.TEST_EMAIL_OVERRIDE]
@@ -30,9 +20,9 @@ export const sendApplicationNotification = async (application: MembershipApplica
           'max@dyps.uk'
         ];
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: recipients.join(', '),
+    const { data, error } = await resend.emails.send({
+      from: 'DYPS <noreply@resend.dev>', // Using Resend's default domain for now
+      to: recipients,
       subject: `🎯 New DYPS Membership Application - ${application.name}`,
       html: `
         <!DOCTYPE html>
@@ -117,7 +107,7 @@ export const sendApplicationNotification = async (application: MembershipApplica
 
               <!-- CTA Button -->
               <div style="text-align: center; margin: 35px 0;">
-                <a href="${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:3002'}/admin/dashboard"
+                <a href="${process.env.NODE_ENV === 'production' ? `https://${process.env.DOMAIN}` : 'http://localhost:3002'}/admin/dashboard"
                    style="display: inline-block; background: linear-gradient(135deg, #B45309 0%, #1E293B 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3); transition: all 0.3s ease;">
                   🔍 Review Application
                 </a>
@@ -153,10 +143,13 @@ export const sendApplicationNotification = async (application: MembershipApplica
         </body>
         </html>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log('Application notification sent successfully');
+    if (error) {
+      console.error('Failed to send email notification:', error);
+    } else {
+      console.log('Application notification sent successfully via Resend:', data);
+    }
   } catch (error) {
     console.error('Failed to send email notification:', error);
   }

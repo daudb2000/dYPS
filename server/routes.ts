@@ -1,5 +1,6 @@
 import type { Express, Request, Response } from "express";
 import session from "express-session";
+import MemoryStore from "memorystore";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
@@ -16,13 +17,21 @@ declare module 'express-session' {
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup session middleware
+  const isProduction = process.env.NODE_ENV === 'production';
+  const memoryStoreInstance = isProduction ? MemoryStore(session) : undefined;
+
   app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
     resave: false,
     saveUninitialized: false,
+    store: isProduction ? new memoryStoreInstance({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }) : undefined,
     cookie: {
-      secure: false, // Set to true in production with HTTPS
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      secure: isProduction, // Use secure cookies in production (HTTPS required)
+      httpOnly: true, // Prevent XSS attacks
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: isProduction ? 'strict' : 'lax' // CSRF protection
     }
   }));
   // POST /api/membership-applications - Submit membership application
@@ -63,9 +72,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-      
-      // Simple admin check (you can enhance this later with proper hashing)
-      if (username === "admin" && password === "admin123") {
+
+      // Admin credentials from environment variables
+      const adminUsername = process.env.ADMIN_USERNAME || "admin";
+      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
+      if (username === adminUsername && password === adminPassword) {
         req.session.isAdmin = true;
         req.session.adminUsername = username;
         res.json({ success: true, message: "Login successful" });
@@ -101,6 +113,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/accepted", requireAdmin, async (req, res) => {
     try {
       const applications = await storage.getAcceptedApplications();
+      res.json({ success: true, applications });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
+
+  // GET /api/admin/rejected - Get rejected applications
+  app.get("/api/admin/rejected", requireAdmin, async (req, res) => {
+    try {
+      const applications = await storage.getRejectedApplications();
       res.json({ success: true, applications });
     } catch (error) {
       res.status(500).json({ success: false, message: "Internal server error" });

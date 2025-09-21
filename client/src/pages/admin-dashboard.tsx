@@ -57,6 +57,29 @@ export default function AdminDashboard() {
     },
   });
 
+  const declineMutation = useMutation({
+    mutationFn: async (applicationId: string) => {
+      const response = await apiRequest("PATCH", `/api/admin/applications/${applicationId}/status`, {
+        status: "rejected"
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Application Declined",
+        description: "The application has been declined.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/pending"] });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to decline application.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const logoutMutation = useMutation({
     mutationFn: async () => {
       const response = await apiRequest("POST", "/api/admin/logout");
@@ -76,35 +99,37 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen" style={{backgroundColor: '#fceadc'}}>
+      <div className="max-w-6xl mx-auto p-6">
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
             <Button
               onClick={() => setHideAccepted(!hideAccepted)}
               variant="outline"
               size="sm"
+              className="border-gray-300"
               data-testid="button-hide-accepted"
             >
               {hideAccepted ? <Eye className="h-4 w-4 mr-2" /> : <EyeOff className="h-4 w-4 mr-2" />}
               {hideAccepted ? "Show Accepted" : "Hide Accepted"}
             </Button>
             <div>
-              <h1 className="text-3xl font-bold text-foreground">DYPS Admin Dashboard</h1>
-              <p className="text-muted-foreground">Review and manage membership applications</p>
+              <h1 className="text-3xl font-bold" style={{color: '#374151'}}>DYPS Admin Dashboard</h1>
+              <p style={{color: '#6b7280'}}>Review and manage membership applications</p>
             </div>
           </div>
           <div className="flex gap-4">
             <Button
               onClick={() => setLocation("/admin/backlog")}
               variant="outline"
+              className="border-gray-300"
               data-testid="button-backlog"
             >
               📋 Backlog View
             </Button>
             <Button
               onClick={() => setLocation("/admin/accepted")}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 hover:bg-green-700 text-white"
               data-testid="button-accepted"
             >
               ✓ Accepted Applications
@@ -112,6 +137,7 @@ export default function AdminDashboard() {
             <Button
               onClick={() => logoutMutation.mutate()}
               variant="outline"
+              className="border-gray-300"
               disabled={logoutMutation.isPending}
               data-testid="button-logout"
             >
@@ -140,7 +166,7 @@ export default function AdminDashboard() {
                   <Card key={application.id} className="w-full">
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
                           <div>
                             <h3 className="font-semibold text-lg">{application.name}</h3>
                             <p className="text-sm text-muted-foreground">
@@ -159,11 +185,37 @@ export default function AdminDashboard() {
                             <p className="font-medium">{application.email}</p>
                             <p className="text-sm text-muted-foreground">Email</p>
                           </div>
+                          <div>
+                            {application.linkedin ? (
+                              <a
+                                href={application.linkedin}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-medium text-blue-600 hover:text-blue-800 underline"
+                              >
+                                LinkedIn Profile
+                              </a>
+                            ) : (
+                              <p className="font-medium text-muted-foreground">-</p>
+                            )}
+                            <p className="text-sm text-muted-foreground">LinkedIn</p>
+                          </div>
                         </div>
-                        <div className="ml-6">
+                        <div className="ml-6 flex gap-2">
+                          <Button
+                            onClick={() => declineMutation.mutate(application.id)}
+                            disabled={declineMutation.isPending || acceptMutation.isPending}
+                            variant="outline"
+                            size="sm"
+                            className="bg-red-600 hover:bg-red-700 text-white border-red-600"
+                            data-testid={`button-decline-${application.id}`}
+                          >
+                            {declineMutation.isPending ? "Declining..." : "Decline"}
+                          </Button>
                           <Button
                             onClick={() => acceptMutation.mutate(application.id)}
-                            disabled={acceptMutation.isPending}
+                            disabled={acceptMutation.isPending || declineMutation.isPending}
+                            size="sm"
                             className="bg-green-600 hover:bg-green-700"
                             data-testid={`button-accept-${application.id}`}
                           >
@@ -198,7 +250,7 @@ export default function AdminDashboard() {
                     <Card key={application.id} className="w-full border-green-200">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
-                          <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                          <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
                             <div>
                               <h3 className="font-semibold text-lg">{application.name}</h3>
                               <p className="text-sm text-muted-foreground">
@@ -216,6 +268,21 @@ export default function AdminDashboard() {
                             <div>
                               <p className="font-medium">{application.email}</p>
                               <p className="text-sm text-muted-foreground">Email</p>
+                            </div>
+                            <div>
+                              {application.linkedin ? (
+                                <a
+                                  href={application.linkedin}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="font-medium text-blue-600 hover:text-blue-800 underline"
+                                >
+                                  LinkedIn Profile
+                                </a>
+                              ) : (
+                                <p className="font-medium text-muted-foreground">-</p>
+                              )}
+                              <p className="text-sm text-muted-foreground">LinkedIn</p>
                             </div>
                           </div>
                           <div className="ml-6">

@@ -31,13 +31,23 @@ export default function AdminBacklog() {
     },
   });
 
+  const { data: rejectedApplications, isLoading: rejectedLoading } = useQuery({
+    queryKey: ["/api/admin/rejected"],
+    queryFn: async () => {
+      const response = await apiRequest("GET", "/api/admin/rejected");
+      const data = await response.json();
+      return data.applications as MembershipApplication[];
+    },
+  });
+
   // Combine all applications
   const allApplications = [
     ...(pendingApplications || []).map(app => ({ ...app, status: "pending" as const })),
-    ...(acceptedApplications || []).map(app => ({ ...app, status: "accepted" as const }))
+    ...(acceptedApplications || []).map(app => ({ ...app, status: "accepted" as const })),
+    ...(rejectedApplications || []).map(app => ({ ...app, status: "rejected" as const }))
   ];
 
-  if (pendingLoading || acceptedLoading) {
+  if (pendingLoading || acceptedLoading || rejectedLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div>Loading...</div>
@@ -70,7 +80,7 @@ export default function AdminBacklog() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
+    <div className="min-h-screen p-6" style={{backgroundColor: '#fceadc'}}>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <Button
@@ -83,8 +93,8 @@ export default function AdminBacklog() {
             Back to Dashboard
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Application Backlog</h1>
-            <p className="text-muted-foreground">Compact view of all applications</p>
+            <h1 className="text-3xl font-bold" style={{color: '#374151'}}>Application Backlog</h1>
+            <p style={{color: '#6b7280'}}>Compact view of all applications</p>
           </div>
         </div>
 
@@ -171,17 +181,33 @@ export default function AdminBacklog() {
                           <p className="text-sm text-muted-foreground">Email</p>
                           <p className="font-medium">{application.email}</p>
                         </div>
-                        
+
                         <div>
                           <p className="text-sm text-muted-foreground">Company</p>
                           <p className="font-medium">{application.company}</p>
                         </div>
-                        
+
                         <div>
                           <p className="text-sm text-muted-foreground">Role</p>
                           <p className="font-medium">{application.role}</p>
                         </div>
-                        
+
+                        <div>
+                          <p className="text-sm text-muted-foreground">LinkedIn</p>
+                          {application.linkedin ? (
+                            <a
+                              href={application.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-blue-600 hover:text-blue-800 underline"
+                            >
+                              View Profile
+                            </a>
+                          ) : (
+                            <p className="font-medium text-muted-foreground">Not provided</p>
+                          )}
+                        </div>
+
                         <div>
                           <p className="text-sm text-muted-foreground">
                             {application.status === "accepted" ? "Accepted" : "Submitted"}

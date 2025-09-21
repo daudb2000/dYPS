@@ -15,6 +15,7 @@ export const membershipApplications = pgTable("membership_applications", {
   company: text("company").notNull(),
   role: text("role").notNull(),
   email: text("email").notNull(),
+  linkedin: text("linkedin"),
   consent: boolean("consent").notNull().default(false),
   status: text("status").notNull().default("pending"),
   submittedAt: timestamp("submitted_at").notNull().defaultNow(),
@@ -38,6 +39,7 @@ export const insertMembershipApplicationSchema = createInsertSchema(membershipAp
   company: z.string().min(1, "Company is required"),
   role: z.string().min(1, "Role is required"),
   email: z.string().email("Valid email is required"),
+  linkedin: z.string().optional(),
   consent: z.boolean().refine((val) => val === true, "Consent is required"),
 });
 

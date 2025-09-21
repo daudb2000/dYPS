@@ -83,7 +83,7 @@ export default function AdminAccepted() {
                 <Card key={application.id} className="w-full border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
                   <CardContent className="p-6">
                     <div className="flex items-center justify-between">
-                      <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="flex-1 grid grid-cols-1 md:grid-cols-5 gap-4">
                         <div>
                           <h3 className="font-semibold text-lg">{application.name}</h3>
                           <p className="text-sm text-muted-foreground">
@@ -101,6 +101,21 @@ export default function AdminAccepted() {
                         <div>
                           <p className="font-medium text-primary">{application.email}</p>
                           <p className="text-sm text-muted-foreground">Email for welcome</p>
+                        </div>
+                        <div>
+                          {application.linkedin ? (
+                            <a
+                              href={application.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-medium text-blue-600 hover:text-blue-800 underline"
+                            >
+                              LinkedIn Profile
+                            </a>
+                          ) : (
+                            <p className="font-medium text-muted-foreground">-</p>
+                          )}
+                          <p className="text-sm text-muted-foreground">LinkedIn</p>
                         </div>
                       </div>
                       <div className="ml-6 text-center">
