@@ -1,0 +1,349 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deals Young Professional Society</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    serif: ["Georgia", "Times New Roman", "serif"],
+                    sans: ["Inter", "system-ui", "sans-serif"],
+                }
+            },
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(28 100% 98%);
+            --foreground: hsl(20 20% 15%);
+            --card: hsl(28 50% 96%);
+            --card-foreground: hsl(20 20% 15%);
+            --primary: hsl(351 80% 58%);
+            --primary-foreground: hsl(0 0% 100%);
+            --secondary: hsl(25 30% 85%);
+            --secondary-foreground: hsl(20 20% 25%);
+            --muted: hsl(25 20% 90%);
+            --muted-foreground: hsl(20 10% 45%);
+            --accent: hsl(351 80% 58%);
+            --accent-foreground: hsl(0 0% 100%);
+            --border: hsl(25 30% 85%);
+            --input: hsl(25 30% 85%);
+            --ring: hsl(351 80% 58%);
+            --radius: 0.25rem;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            line-height: 1.6;
+        }
+
+        .ft-serif {
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .form-field {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-field:focus {
+            outline: none;
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px hsla(351, 80%, 58%, 0.1);
+        }
+
+        .checkbox-custom {
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid var(--border);
+            border-radius: 0.25rem;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .checkbox-custom:checked {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkbox-custom:checked::after {
+            content: '✓';
+            position: absolute;
+            top: -2px;
+            left: 2px;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-submit:hover {
+            background-color: hsl(351 80% 52%);
+            transform: translateY(-1px);
+        }
+
+        .link-policy {
+            color: var(--primary);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-bottom 0.2s ease-in-out;
+        }
+
+        .link-policy:hover {
+            border-bottom-color: var(--primary);
+        }
+    </style>
+</head>
+
+<body class="bg-background text-foreground min-h-screen">
+    <!-- @COMPONENT: MainContainer -->
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
+        <div class="max-w-lg w-full space-y-8">
+            
+            <!-- @COMPONENT: LogoSection -->
+            <!-- Logo placeholder - centered -->
+            <div class="text-center">
+                <div class="inline-block p-8 border-2 border-dashed border-border rounded-lg">
+                    <span class="ft-serif text-2xl font-bold text-muted-foreground">LOGO</span>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: LogoSection -->
+
+            <!-- @COMPONENT: DescriptiveText -->
+            <div class="text-center space-y-4">
+                <h1 class="ft-serif text-3xl md:text-4xl font-bold text-foreground leading-tight">
+                    Deals Young Professional Society
+                </h1>
+                <p class="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
+                    An exclusive network connecting the next generation of deal-makers, 
+                    investment professionals, and industry leaders across finance and business.
+                </p>
+                <p class="text-base text-muted-foreground">
+                    Join our community of ambitious professionals shaping the future of finance.
+                </p>
+            </div>
+            <!-- @END_COMPONENT: DescriptiveText -->
+
+            <!-- @COMPONENT: MembershipForm -->
+            <div class="bg-card border border-border rounded-lg p-8 shadow-sm">
+                <h2 class="ft-serif text-xl font-semibold text-card-foreground mb-6 text-center">
+                    Apply for Membership
+                </h2>
+                
+                <form class="space-y-5" data-event="submit:handleFormSubmission">
+                    <!-- Name Field -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-foreground mb-2">
+                            Full Name *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            required
+                            data-bind="form.name"
+                            class="form-field w-full px-4 py-3 border border-input bg-background rounded-md text-foreground placeholder-muted-foreground"
+                            placeholder="Enter your full name"
+                            data-mock="true"
+                        />
+                    </div>
+
+                    <!-- Company Field -->
+                    <div>
+                        <label for="company" class="block text-sm font-medium text-foreground mb-2">
+                            Company *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="company" 
+                            name="company" 
+                            required
+                            data-bind="form.company"
+                            class="form-field w-full px-4 py-3 border border-input bg-background rounded-md text-foreground placeholder-muted-foreground"
+                            placeholder="Enter your company name"
+                            data-mock="true"
+                        />
+                    </div>
+
+                    <!-- Role Field -->
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-foreground mb-2">
+                            Role *
+                        </label>
+                        <input 
+                            type="text" 
+                            id="role" 
+                            name="role" 
+                            required
+                            data-bind="form.role"
+                            class="form-field w-full px-4 py-3 border border-input bg-background rounded-md text-foreground placeholder-muted-foreground"
+                            placeholder="Enter your job title"
+                            data-mock="true"
+                        />
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-foreground mb-2">
+                            Email Address *
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required
+                            data-bind="form.email"
+                            class="form-field w-full px-4 py-3 border border-input bg-background rounded-md text-foreground placeholder-muted-foreground"
+                            placeholder="Enter your professional email"
+                            data-mock="true"
+                        />
+                    </div>
+
+                    <!-- Consent Checkbox -->
+                    <div class="space-y-4 pt-2">
+                        <div class="flex items-start space-x-3">
+                            <input 
+                                type="checkbox" 
+                                id="consent" 
+                                name="consent" 
+                                required
+                                data-bind="form.consent"
+                                class="checkbox-custom mt-1"
+                                data-mock="true"
+                            />
+                            <label for="consent" class="text-sm text-foreground leading-relaxed cursor-pointer">
+                                I consent to being contacted regarding my membership application status
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button 
+                            type="submit" 
+                            class="btn-submit w-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-3 px-6 rounded-md transition-all duration-200"
+                            data-event="click:handleSubmit"
+                            data-implementation="Should validate form before submission"
+                        >
+                            Submit Application
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Data Policy Link -->
+                <div class="mt-6 pt-4 border-t border-border text-center">
+                    <p class="text-sm text-muted-foreground">
+                        By submitting this form, you agree to our 
+                        <a href="#" class="link-policy" data-event="click:openDataPolicy">
+                            Data Retention Policy
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <!-- @END_COMPONENT: MembershipForm -->
+
+        </div>
+    </div>
+    <!-- @END_COMPONENT: MainContainer -->
+
+    <!-- @COMPONENT: ToastNotification -->
+    <!-- @STATE: showToast:boolean = false, toastMessage:string = '', toastType:'success'|'error' = 'success' -->
+    <div id="toast" class="fixed top-4 right-4 transform translate-x-full transition-transform duration-300 ease-in-out z-50">
+        <div class="bg-primary text-primary-foreground px-6 py-3 rounded-md shadow-lg max-w-sm">
+            <p class="text-sm font-medium" data-bind="toastMessage">Application submitted successfully!</p>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: ToastNotification -->
+
+    <script>
+        // TODO: Implement form validation and submission logic
+        (function() {
+            // Form handling placeholder
+            const form = document.querySelector('form');
+            const toast = document.getElementById('toast');
+            
+            // Mock form submission handler
+            form?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Basic form validation
+                const formData = new FormData(form);
+                const requiredFields = ['name', 'company', 'role', 'email'];
+                
+                for (let field of requiredFields) {
+                    if (!formData.get(field)?.trim()) {
+                        showToast('Please fill in all required fields', 'error');
+                        return;
+                    }
+                }
+                
+                if (!formData.get('consent')) {
+                    showToast('Please provide consent for contact', 'error');
+                    return;
+                }
+                
+                // Mock successful submission
+                showToast('Application submitted successfully! We will be in touch soon.', 'success');
+                form.reset();
+            });
+            
+            function showToast(message, type = 'success') {
+                const toastElement = toast.querySelector('p');
+                const toastContainer = toast.querySelector('div');
+                
+                toastElement.textContent = message;
+                toastContainer.className = type === 'error' 
+                    ? 'bg-red-600 text-white px-6 py-3 rounded-md shadow-lg max-w-sm'
+                    : 'bg-primary text-primary-foreground px-6 py-3 rounded-md shadow-lg max-w-sm';
+                
+                toast.style.transform = 'translateX(0)';
+                
+                setTimeout(() => {
+                    toast.style.transform = 'translateX(100%)';
+                }, 3000);
+            }
+        })();
+    </script>
+</body>
+</html>

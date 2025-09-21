@@ -96,3 +96,4 @@ Check these endpoints for health:
 4. **Domain not working**: Verify DNS records and Railway domain settings
 
 **Logs**: Use Railway dashboard to view application logs and debug issues.# Railway deployment trigger Sun Sep 21 18:26:16 BST 2025
+# Railway deployment trigger Sun Sep 21 18:56:22 BST 2025

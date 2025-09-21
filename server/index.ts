@@ -62,11 +62,22 @@ app.use((req, res, next) => {
   // setting up all the other routes so the catch-all route
   // doesn't interfere with the other routes
   if (process.env.NODE_ENV === "development") {
-    const { setupVite } = await import("./vite");
+    const { setupVite } = await import("./vite.ts.backup");
     await setupVite(app, server);
   } else {
-    const { serveStatic } = await import("./vite");
-    serveStatic(app);
+    // In production, Railway will use server/production.ts instead of this file
+    // This path should not be reached in production deployment
+    const path = await import("path");
+    const fs = await import("fs");
+
+    const distPath = path.resolve(import.meta.dirname, "..", "dist", "public");
+    if (!fs.existsSync(distPath)) {
+      throw new Error(`Could not find build directory: ${distPath}`);
+    }
+    app.use((await import("express")).static(distPath));
+    app.use("*", (_req, res) => {
+      res.sendFile(path.resolve(distPath, "index.html"));
+    });
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
