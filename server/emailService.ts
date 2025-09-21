@@ -3,7 +3,7 @@ import type { MembershipApplication } from '@shared/schema';
 
 // Create primary transporter (SSL port 465)
 const createPrimaryTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,
@@ -22,7 +22,7 @@ const createPrimaryTransporter = () => {
 
 // Create fallback transporter (STARTTLS port 587)
 const createFallbackTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
@@ -41,7 +41,7 @@ const createFallbackTransporter = () => {
 
 // Create final fallback using Gmail service shortcut
 const createServiceTransporter = () => {
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
