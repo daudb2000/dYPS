@@ -95,6 +95,6 @@ app.use((req, res, next) => {
   const host = '0.0.0.0'; // Always bind to 0.0.0.0 for production
 
   server.listen(port, host, () => {
-    log(`serving on port ${port}`);
+    log(`🚀 DYPS server with FREE EMAIL SERVICE running on port ${port}`);
   });
 })();
