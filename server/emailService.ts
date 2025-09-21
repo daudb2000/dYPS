@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import type { MembershipApplication } from '@shared/schema';
 
-// Create primary transporter (SSL port 465)
+// Create primary transporter (SSL port 465) - Optimized for Railway
 const createPrimaryTransporter = () => {
   return nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -12,15 +12,22 @@ const createPrimaryTransporter = () => {
       pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      ciphers: 'SSLv3',
+      servername: 'smtp.gmail.com'
     },
-    connectionTimeout: 15000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
+    connectionTimeout: 30000, // Increased for cloud environments
+    greetingTimeout: 30000,
+    socketTimeout: 30000,
+    pool: false, // Disable connection pooling for Railway
+    maxConnections: 1,
+    maxMessages: 1,
+    debug: process.env.NODE_ENV === 'production', // Enable debug in production
+    logger: process.env.NODE_ENV === 'production'
   });
 };
 
-// Create fallback transporter (STARTTLS port 587)
+// Create fallback transporter (STARTTLS port 587) - Railway optimized
 const createFallbackTransporter = () => {
   return nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -31,15 +38,22 @@ const createFallbackTransporter = () => {
       pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      ciphers: 'SSLv3',
+      servername: 'smtp.gmail.com'
     },
-    connectionTimeout: 20000,
-    greetingTimeout: 15000,
-    socketTimeout: 20000,
+    connectionTimeout: 45000, // Extra time for Railway
+    greetingTimeout: 30000,
+    socketTimeout: 45000,
+    pool: false,
+    maxConnections: 1,
+    maxMessages: 1,
+    debug: process.env.NODE_ENV === 'production',
+    logger: process.env.NODE_ENV === 'production'
   });
 };
 
-// Create final fallback using Gmail service shortcut
+// Create final fallback using Gmail service shortcut - Railway safe
 const createServiceTransporter = () => {
   return nodemailer.createTransport({
     service: 'gmail',
@@ -47,6 +61,14 @@ const createServiceTransporter = () => {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
+    tls: {
+      rejectUnauthorized: false
+    },
+    pool: false,
+    maxConnections: 1,
+    maxMessages: 1,
+    debug: process.env.NODE_ENV === 'production',
+    logger: process.env.NODE_ENV === 'production'
   });
 };
 
