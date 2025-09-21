@@ -1,26 +1,56 @@
 import nodemailer from 'nodemailer';
 import type { MembershipApplication } from '@shared/schema';
 
-// Create transporter using Gmail SMTP (free)
-const createTransporter = () => {
+// Create primary transporter (SSL port 465)
+const createPrimaryTransporter = () => {
   return nodemailer.createTransporter({
     host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Use STARTTLS
+    port: 465,
+    secure: true,
     auth: {
-      user: process.env.EMAIL_USER, // Gmail address
-      pass: process.env.EMAIL_PASSWORD, // Gmail app password (not regular password)
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
     },
     tls: {
       rejectUnauthorized: false
     },
-    connectionTimeout: 60000, // 60 seconds
-    greetingTimeout: 30000, // 30 seconds
-    socketTimeout: 60000, // 60 seconds
+    connectionTimeout: 15000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
   });
 };
 
-// Test SMTP connection
+// Create fallback transporter (STARTTLS port 587)
+const createFallbackTransporter = () => {
+  return nodemailer.createTransporter({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false
+    },
+    connectionTimeout: 20000,
+    greetingTimeout: 15000,
+    socketTimeout: 20000,
+  });
+};
+
+// Create final fallback using Gmail service shortcut
+const createServiceTransporter = () => {
+  return nodemailer.createTransporter({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
+};
+
+// Test connection with retries
 export const testEmailConnection = async () => {
   console.log('🔧 Testing email connection...');
 
@@ -29,17 +59,24 @@ export const testEmailConnection = async () => {
     return false;
   }
 
-  try {
-    const transporter = createTransporter();
-    console.log('📧 Verifying SMTP connection...');
-    await transporter.verify();
-    console.log('✅ SMTP connection verified successfully');
-    return true;
-  } catch (error) {
-    console.error('❌ SMTP connection failed:');
-    console.error('Error details:', error);
-    return false;
+  const transporters = [
+    { name: 'Primary (SSL 465)', transporter: createPrimaryTransporter() },
+    { name: 'Fallback (STARTTLS 587)', transporter: createFallbackTransporter() },
+    { name: 'Service (Gmail)', transporter: createServiceTransporter() }
+  ];
+
+  for (const { name, transporter } of transporters) {
+    try {
+      console.log(`📧 Testing ${name}...`);
+      await transporter.verify();
+      console.log(`✅ ${name} connection successful`);
+      return { success: true, method: name, transporter };
+    } catch (error) {
+      console.error(`❌ ${name} failed:`, error);
+    }
   }
+
+  return false;
 };
 
 export const sendApplicationNotification = async (application: MembershipApplication) => {
@@ -53,13 +90,17 @@ export const sendApplicationNotification = async (application: MembershipApplica
   }
 
   try {
-    console.log('📧 Creating email transporter...');
-    const transporter = createTransporter();
+    // Test connection and get working transporter
+    console.log('🔗 Finding working SMTP connection...');
+    const connectionResult = await testEmailConnection();
 
-    // Test connection first
-    console.log('🔗 Testing SMTP connection...');
-    await transporter.verify();
-    console.log('✅ SMTP connection verified');
+    if (!connectionResult || !connectionResult.success) {
+      console.error('❌ All SMTP connection attempts failed');
+      return;
+    }
+
+    console.log(`✅ Using ${connectionResult.method} for sending`);
+    const transporter = connectionResult.transporter;
 
     // Use test email override if provided, otherwise use DYPS emails
     const recipients = process.env.TEST_EMAIL_OVERRIDE
@@ -159,7 +200,7 @@ export const sendApplicationNotification = async (application: MembershipApplica
 
               <!-- CTA Button -->
               <div style="text-align: center; margin: 35px 0;">
-                <a href="${process.env.REPLIT_DEV_DOMAIN || 'http://localhost:3002'}/admin/dashboard"
+                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard"
                    style="display: inline-block; background: linear-gradient(135deg, #B45309 0%, #1E293B 100%); color: white; padding: 16px 40px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3); transition: all 0.3s ease;">
                   🔍 Review Application
                 </a>
