@@ -1,4 +1,4 @@
-import { Database } from 'bun:sqlite';
+import Database from 'better-sqlite3';
 import { type User, type InsertUser, type MembershipApplication, type InsertMembershipApplication, type UpdateApplicationStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
 import type { IStorage } from "./storage";
@@ -7,7 +7,7 @@ export class SqliteStorage implements IStorage {
   private db: Database;
 
   constructor(dbPath: string = './dyps.db') {
-    this.db = new Database(dbPath, { create: true });
+    this.db = new Database(dbPath);
     this.initializeTables();
   }
 
