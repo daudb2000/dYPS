@@ -3,13 +3,43 @@ import type { MembershipApplication } from '@shared/schema';
 
 // Create transporter using Gmail SMTP (free)
 const createTransporter = () => {
-  return nodemailer.createTransport({
-    service: 'gmail',
+  return nodemailer.createTransporter({
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // Use STARTTLS
     auth: {
       user: process.env.EMAIL_USER, // Gmail address
       pass: process.env.EMAIL_PASSWORD, // Gmail app password (not regular password)
     },
+    tls: {
+      rejectUnauthorized: false
+    },
+    connectionTimeout: 60000, // 60 seconds
+    greetingTimeout: 30000, // 30 seconds
+    socketTimeout: 60000, // 60 seconds
   });
+};
+
+// Test SMTP connection
+export const testEmailConnection = async () => {
+  console.log('🔧 Testing email connection...');
+
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.error('❌ Email configuration missing');
+    return false;
+  }
+
+  try {
+    const transporter = createTransporter();
+    console.log('📧 Verifying SMTP connection...');
+    await transporter.verify();
+    console.log('✅ SMTP connection verified successfully');
+    return true;
+  } catch (error) {
+    console.error('❌ SMTP connection failed:');
+    console.error('Error details:', error);
+    return false;
+  }
 };
 
 export const sendApplicationNotification = async (application: MembershipApplication) => {
@@ -25,6 +55,11 @@ export const sendApplicationNotification = async (application: MembershipApplica
   try {
     console.log('📧 Creating email transporter...');
     const transporter = createTransporter();
+
+    // Test connection first
+    console.log('🔗 Testing SMTP connection...');
+    await transporter.verify();
+    console.log('✅ SMTP connection verified');
 
     // Use test email override if provided, otherwise use DYPS emails
     const recipients = process.env.TEST_EMAIL_OVERRIDE

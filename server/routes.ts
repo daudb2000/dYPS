@@ -4,7 +4,7 @@ import MemoryStore from "memorystore";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
-import { sendApplicationNotification } from "./emailService";
+import { sendApplicationNotification, testEmailConnection } from "./emailService";
 import { z } from "zod";
 
 // Extend Express session interface
@@ -171,6 +171,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/test-email", requireAdmin, async (req, res) => {
     try {
       console.log('🔧 Testing email configuration...');
+
+      // First test SMTP connection
+      const connectionTest = await testEmailConnection();
+
+      if (!connectionTest) {
+        return res.status(500).json({
+          success: false,
+          message: "SMTP connection failed",
+          environment: {
+            emailUser: process.env.EMAIL_USER ? '✓ Set' : '❌ Missing',
+            emailPassword: process.env.EMAIL_PASSWORD ? '✓ Set' : '❌ Missing',
+            nodeEnv: process.env.NODE_ENV
+          }
+        });
+      }
 
       // Create a test application
       const testApplication = {
