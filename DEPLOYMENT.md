@@ -95,4 +95,4 @@ Check these endpoints for health:
 3. **Admin login fails**: Check ADMIN_USERNAME and ADMIN_PASSWORD env vars
 4. **Domain not working**: Verify DNS records and Railway domain settings
 
-**Logs**: Use Railway dashboard to view application logs and debug issues.
+**Logs**: Use Railway dashboard to view application logs and debug issues.# Railway deployment trigger Sun Sep 21 18:26:16 BST 2025
