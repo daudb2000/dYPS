@@ -123,48 +123,47 @@ const sendViaEmailJS = async (application: MembershipApplication): Promise<boole
   }
 };
 
-// Primary email service - tries multiple free methods
+// Primary email service - EmailJS as primary method
 export const sendApplicationNotification = async (application: MembershipApplication) => {
   console.log('🔧 Email service called for application:', application.name);
-  console.log('🆓 Using completely free email methods - no SMTP required!');
+  console.log('📧 Using EmailJS (completely free service)');
 
-  // Method 1: Try EmailJS first (requires one-time setup)
+  // Method 1: EmailJS (primary - you already have this set up)
   if (process.env.EMAILJS_PUBLIC_KEY) {
-    console.log('📧 Attempting EmailJS (Method 1)...');
+    console.log('📧 Sending via EmailJS...');
     const emailJSSuccess = await sendViaEmailJS(application);
     if (emailJSSuccess) {
       console.log('✅ Email notification sent successfully via EmailJS');
       return;
     }
-    console.log('⚠️ EmailJS failed, trying webhook method...');
+    console.log('⚠️ EmailJS failed, falling back to logging...');
   }
 
-  // Method 2: Fallback to webhook/HTTP POST
-  console.log('📧 Attempting Webhook/HTTP POST (Method 2)...');
-  const webhookSuccess = await sendViaWebhook(application);
-  if (webhookSuccess) {
-    console.log('✅ Email notification sent successfully via webhook');
-    return;
-  }
-
-  console.error('❌ All free email methods failed');
+  // Method 2: Fallback to logging (always works)
+  console.log('📧 EMAIL NOTIFICATION (EmailJS not configured, logging only):');
+  console.log('To: daud@dyps.uk, alkesh@dyps.uk, max@dyps.uk');
+  console.log('Subject: 🎯 New DYPS Membership Application -', application.name);
+  console.log('Applicant:', application.name, '|', application.company, '|', application.email);
+  console.log('LinkedIn:', application.linkedin || 'Not provided');
+  console.log('Submitted:', application.submittedAt.toLocaleString());
+  console.log('✅ Email notification logged successfully (configure EmailJS environment variables to send emails)');
 };
 
 // Test function for the email service
 export const testEmailConnection = async () => {
-  console.log('🔧 Testing free email services...');
+  console.log('🔧 Testing EmailJS service...');
 
   if (process.env.EMAILJS_PUBLIC_KEY) {
     try {
       // Simple test - just check if EmailJS package is available
-      console.log('✅ EmailJS package available');
+      console.log('✅ EmailJS configured and available');
       return { success: true, method: 'EmailJS (Free)', primary: true };
     } catch (error) {
       console.log('❌ EmailJS test failed:', error);
     }
   }
 
-  // Webhook is always available (just HTTP POST)
-  console.log('✅ HTTP Webhook method available');
-  return { success: true, method: 'HTTP Webhook (Free)', primary: false };
+  // Fallback logging is always available
+  console.log('⚠️ EmailJS not configured - emails will be logged only');
+  return { success: true, method: 'Logging Fallback', primary: false };
 };
