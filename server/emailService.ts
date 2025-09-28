@@ -1,7 +1,7 @@
 import * as nodemailer from 'nodemailer';
 import type { MembershipApplication } from '@shared/schema';
 
-// Gmail SMTP configuration (free and reliable)
+// Gmail SMTP configuration with Railway optimizations
 const createTransporter = () => {
   return nodemailer.createTransport({
     service: 'gmail',
@@ -9,6 +9,12 @@ const createTransporter = () => {
       user: process.env.EMAIL_USER, // Your Gmail address
       pass: process.env.EMAIL_PASSWORD, // Gmail app password (not regular password)
     },
+    pool: true,
+    maxConnections: 1,
+    maxMessages: 3,
+    connectionTimeout: 10000,  // 10 seconds (instead of default 2 minutes)
+    greetingTimeout: 10000,    // 10 seconds
+    socketTimeout: 30000,      // 30 seconds total
   });
 };
 
@@ -72,82 +78,93 @@ Manchester's Elite Professional Network
   }
 };
 
-// Primary email service - Gmail SMTP → Formspree → Logging fallback
+// Primary email service - Optimized for Railway deployment
 export const sendApplicationNotification = async (application: MembershipApplication) => {
-  console.log('🔧 About to call sendApplicationNotification for:', application.name);
+  console.log('🔧 Email service called for application:', application.name);
 
   const adminEmails = process.env.ADMIN_EMAIL || 'daud@dyps.uk, alkesh@dyps.uk, max@dyps.uk';
+  const isProduction = process.env.NODE_ENV === 'production';
 
-  // Method 1: Try Gmail SMTP first (if configured)
-  if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-    console.log('🔧 Email service called for application:', application.name);
-    console.log('📧 Method 1: Trying Gmail SMTP');
-
-    try {
-      const transporter = createTransporter();
-
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: adminEmails,
-        subject: `🎯 New DYPS Membership Application - ${application.name}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #DC2626;">New Membership Application Submitted</h2>
-
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="margin-top: 0;">Applicant Details:</h3>
-              <p><strong>Name:</strong> ${application.name}</p>
-              <p><strong>Company:</strong> ${application.company}</p>
-              <p><strong>Role:</strong> ${application.role || 'Not specified'}</p>
-              <p><strong>Email:</strong> ${application.email}</p>
-              ${application.linkedin ? `<p><strong>LinkedIn:</strong> <a href="${application.linkedin}">${application.linkedin}</a></p>` : ''}
-              <p><strong>Submitted:</strong> ${application.submittedAt.toLocaleDateString()}, ${application.submittedAt.toLocaleTimeString()}</p>
-            </div>
-
-            <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; border-left: 4px solid #2563eb;">
-              <p style="margin: 0;"><strong>Next Steps:</strong></p>
-              <p style="margin: 5px 0;">Review this application in your admin dashboard and either accept or reject the candidate.</p>
-            </div>
-
-            <div style="margin-top: 30px; text-align: center;">
-              <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard"
-                 style="background: #DC2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-                Review Application
-              </a>
-            </div>
-          </div>
-        `,
-      };
-
-      await transporter.sendMail(mailOptions);
-      console.log('✅ Email notification sent successfully via Gmail SMTP');
-      console.log('✅ Email notification completed successfully');
+  // Railway optimization: Skip Gmail SMTP in production (ports often blocked)
+  if (isProduction) {
+    console.log('📧 Production mode: Using Formspree for reliable delivery');
+    const formspreeSuccess = await sendViaFormspree(application);
+    if (formspreeSuccess) {
+      console.log('✅ Email notification completed successfully via Formspree');
       return;
-    } catch (error) {
-      console.error('❌ Gmail SMTP failed:', error);
-      console.log('⚠️ Gmail SMTP failed, trying Formspree fallback...');
     }
+    console.log('❌ Formspree failed, falling back to logging');
   } else {
-    console.log('📧 Gmail SMTP not configured (EMAIL_USER or EMAIL_PASSWORD missing)');
+    // Method 1: Try Gmail SMTP first (development only)
+    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+      console.log('📧 Method 1: Trying Gmail SMTP (development)');
+
+      try {
+        const transporter = createTransporter();
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: adminEmails,
+          subject: `🎯 New DYPS Membership Application - ${application.name}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #DC2626;">New Membership Application Submitted</h2>
+
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="margin-top: 0;">Applicant Details:</h3>
+                <p><strong>Name:</strong> ${application.name}</p>
+                <p><strong>Company:</strong> ${application.company}</p>
+                <p><strong>Role:</strong> ${application.role || 'Not specified'}</p>
+                <p><strong>Email:</strong> ${application.email}</p>
+                ${application.linkedin ? `<p><strong>LinkedIn:</strong> <a href="${application.linkedin}">${application.linkedin}</a></p>` : ''}
+                <p><strong>Submitted:</strong> ${application.submittedAt.toLocaleDateString()}, ${application.submittedAt.toLocaleTimeString()}</p>
+              </div>
+
+              <div style="background: #e7f3ff; padding: 15px; border-radius: 8px; border-left: 4px solid #2563eb;">
+                <p style="margin: 0;"><strong>Next Steps:</strong></p>
+                <p style="margin: 5px 0;">Review this application in your admin dashboard and either accept or reject the candidate.</p>
+              </div>
+
+              <div style="margin-top: 30px; text-align: center;">
+                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard"
+                   style="background: #DC2626; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                  Review Application
+                </a>
+              </div>
+            </div>
+          `,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('✅ Email notification sent successfully via Gmail SMTP');
+        console.log('✅ Email notification completed successfully');
+        return;
+      } catch (error) {
+        console.error('❌ Gmail SMTP failed:', error);
+        console.log('⚠️ Gmail SMTP failed, trying Formspree fallback...');
+      }
+    } else {
+      console.log('📧 Gmail SMTP not configured (EMAIL_USER or EMAIL_PASSWORD missing)');
+    }
+
+    // Development fallback: Try Formspree
+    console.log('📧 Method 2: Trying Formspree');
+    const formspreeSuccess = await sendViaFormspree(application);
+    if (formspreeSuccess) {
+      console.log('✅ Email notification completed successfully via Formspree');
+      return;
+    }
   }
 
-  // Method 2: Try Formspree (reliable fallback)
-  console.log('📧 Method 2: Trying Formspree');
-  const formspreeSuccess = await sendViaFormspree(application);
-  if (formspreeSuccess) {
-    console.log('✅ Email notification completed successfully via Formspree');
-    return;
-  }
-
-  // Method 3: Final fallback - logging
-  console.log('📧 Method 3: Both Gmail SMTP and Formspree failed, using logging fallback');
+  // Final fallback - logging
+  console.log('📧 Final fallback: Using logging');
   console.log('📧 EMAIL NOTIFICATION (All services failed, logging only):');
   console.log(`To: ${adminEmails}`);
   console.log(`Subject: 🎯 New DYPS Membership Application - ${application.name}`);
   console.log(`Applicant: ${application.name} | ${application.company} | ${application.email}`);
   console.log(`LinkedIn: ${application.linkedin || 'Not provided'}`);
   console.log(`Submitted: ${application.submittedAt.toLocaleDateString()}, ${application.submittedAt.toLocaleTimeString()}`);
-  console.log('✅ Email notification logged successfully (configure EMAIL_USER/EMAIL_PASSWORD or FORMSPREE_ENDPOINT to send actual emails)');
+  console.log('✅ Email notification logged successfully (Production: Formspree recommended, Development: configure EMAIL_USER/EMAIL_PASSWORD for Gmail SMTP)');
 };
 
 // Test function for email services
