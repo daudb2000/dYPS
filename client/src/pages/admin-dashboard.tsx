@@ -128,6 +128,14 @@ export default function AdminDashboard() {
               📋 Backlog View
             </Button>
             <Button
+              onClick={() => setLocation("/admin/database")}
+              variant="outline"
+              className="border-gray-300"
+              data-testid="button-database"
+            >
+              🗄️ Database
+            </Button>
+            <Button
               onClick={() => setLocation("/admin/accepted")}
               className="bg-green-600 hover:bg-green-700 text-white"
               data-testid="button-accepted"

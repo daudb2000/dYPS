@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import session from "express-session";
 import MemoryStore from "memorystore";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { createApplication, getAllApplications, updateApplicationStatus, initializeDatabase, testSupabaseConnection, createApplicationsTable } from "./supabaseService";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
 import { sendApplicationNotification, testEmailConnection } from "./emailService";
 import { z } from "zod";
@@ -38,12 +38,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/membership-applications", async (req, res) => {
     try {
       const validatedData = insertMembershipApplicationSchema.parse(req.body);
-      const application = await storage.createMembershipApplication(validatedData);
+      const application = await createApplication(validatedData);
       
       // Send email notification (non-blocking)
       console.log('🔧 About to call sendApplicationNotification for:', application.name);
       try {
-        await sendApplicationNotification(application);
+        await sendApplicationNotification({
+          id: application.id,
+          name: application.name,
+          email: application.email,
+          company: application.company,
+          role: application.role,
+          linkedin: application.linkedin,
+          status: application.status,
+          submittedAt: new Date(application.submitted_at),
+          reviewedAt: application.reviewed_at ? new Date(application.reviewed_at) : null,
+          reviewedBy: application.reviewed_by
+        });
         console.log('✅ Email notification completed successfully');
       } catch (error) {
         console.error('❌ Email notification failed:', error);
@@ -119,7 +130,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/admin/pending - Get pending applications
   app.get("/api/admin/pending", requireAdmin, async (req, res) => {
     try {
-      const applications = await storage.getPendingApplications();
+      const allApplications = await getAllApplications();
+      const applications = allApplications.filter(app => app.status === 'pending');
       res.json({ success: true, applications });
     } catch (error) {
       res.status(500).json({ success: false, message: "Internal server error" });
@@ -129,7 +141,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/admin/accepted - Get accepted applications
   app.get("/api/admin/accepted", requireAdmin, async (req, res) => {
     try {
-      const applications = await storage.getAcceptedApplications();
+      const allApplications = await getAllApplications();
+      const applications = allApplications.filter(app => app.status === 'accepted');
       res.json({ success: true, applications });
     } catch (error) {
       res.status(500).json({ success: false, message: "Internal server error" });
@@ -139,7 +152,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/admin/rejected - Get rejected applications
   app.get("/api/admin/rejected", requireAdmin, async (req, res) => {
     try {
-      const applications = await storage.getRejectedApplications();
+      const allApplications = await getAllApplications();
+      const applications = allApplications.filter(app => app.status === 'rejected');
       res.json({ success: true, applications });
     } catch (error) {
       res.status(500).json({ success: false, message: "Internal server error" });
@@ -155,8 +169,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         reviewedBy: req.session.adminUsername
       });
       
-      const updatedApplication = await storage.updateApplicationStatus(id, validatedData);
-      
+      await updateApplicationStatus(id, validatedData.status);
+
+      const allApplications = await getAllApplications();
+      const updatedApplication = allApplications.find(app => app.id === id);
+
       if (!updatedApplication) {
         return res.status(404).json({ success: false, message: "Application not found" });
       }
@@ -174,13 +191,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // GET /api/membership-applications - Get all applications (for admin purposes)
   app.get("/api/membership-applications", requireAdmin, async (req, res) => {
     try {
-      const applications = await storage.getMembershipApplications();
+      const applications = await getAllApplications();
       res.json({ success: true, applications });
     } catch (error) {
       res.status(500).json({
         success: false,
         message: "Internal server error"
       });
+    }
+  });
+
+  // POST /api/admin/database/init - Initialize Supabase database
+  app.post("/api/admin/database/init", requireAdmin, async (req, res) => {
+    try {
+      await initializeDatabase();
+      res.json({ success: true, message: "Database initialized successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Failed to initialize database" });
+    }
+  });
+
+  // POST /api/admin/database/create-table - Create applications table
+  app.post("/api/admin/database/create-table", requireAdmin, async (req, res) => {
+    try {
+      await createApplicationsTable();
+      res.json({ success: true, message: "Applications table created successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Failed to create applications table" });
+    }
+  });
+
+  // GET /api/admin/database/test - Test Supabase connection
+  app.get("/api/admin/database/test", requireAdmin, async (req, res) => {
+    try {
+      const isConnected = await testSupabaseConnection();
+      if (isConnected) {
+        res.json({ success: true, message: "Supabase connection successful" });
+      } else {
+        res.status(500).json({ success: false, message: "Supabase connection failed" });
+      }
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Failed to test connection" });
     }
   });
 

@@ -10,6 +10,7 @@ import AdminLogin from "@/pages/admin-login";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminAccepted from "@/pages/admin-accepted";
 import AdminBacklog from "@/pages/admin-backlog";
+import AdminDatabase from "@/pages/admin-database";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/accepted" component={AdminAccepted} />
       <Route path="/admin/backlog" component={AdminBacklog} />
+      <Route path="/admin/database" component={AdminDatabase} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -1,10 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 export default function DataRetention() {
+  const [openSections, setOpenSections] = useState<{[key: string]: boolean}>({});
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const toggleSection = (sectionId: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
+  };
+
+  const ExpandableSection = ({ id, title, children }: { id: string, title: string, children: React.ReactNode }) => {
+    const isOpen = openSections[id];
+    return (
+      <section className="border border-amber-200 rounded-lg bg-gradient-to-br from-white to-amber-50 mb-6">
+        <button
+          onClick={() => toggleSection(id)}
+          className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-amber-50/50 transition-colors rounded-t-lg"
+        >
+          <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-amber-700 opacity-70 font-light">see more...</span>
+            {isOpen ? <ChevronDown className="h-5 w-5 text-amber-600" /> : <ChevronRight className="h-5 w-5 text-amber-600" />}
+          </div>
+        </button>
+        {isOpen && (
+          <div className="px-6 pb-6 pt-2 border-t border-amber-100">
+            {children}
+          </div>
+        )}
+      </section>
+    );
+  };
   return (
     <div className="min-h-screen bg-background py-16 px-4">
       <div className="max-w-4xl mx-auto">
@@ -37,8 +70,7 @@ export default function DataRetention() {
             </p>
           </section>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">2. Categories of Personal Data Processed</h2>
+          <ExpandableSection id="categories" title="2. Categories of Personal Data Processed">
             <p className="mb-4 leading-relaxed">
               In furtherance of our legitimate business interests in operating as a professional membership organisation, we collect and process the following categories of personal data from prospective members:
             </p>
@@ -48,11 +80,9 @@ export default function DataRetention() {
               <li><strong>Professional Data:</strong> comprising current job role or professional title and employing organisation or company name;</li>
               <li><strong>Application Data:</strong> comprising any additional information voluntarily provided as part of the application submission process.</li>
             </ul>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">3. Purposes and Legal Basis for Processing</h2>
-            
+          <ExpandableSection id="purposes" title="3. Purposes and Legal Basis for Processing">
             <h3 className="text-lg font-medium mb-3 text-foreground">3.1 Primary Processing Purposes</h3>
             <p className="mb-4 leading-relaxed">
               We process the aforementioned personal data for the following specified, explicit, and legitimate purposes:
@@ -69,11 +99,9 @@ export default function DataRetention() {
             <p className="mb-4 leading-relaxed">
               Our processing activities are conducted in reliance upon Article 6(1)(f) of the UK GDPR, namely our legitimate interests in operating as a professional membership organisation, managing applications efficiently, maintaining membership records, and protecting the integrity of our processes. We have conducted appropriate balancing assessments to ensure that our legitimate interests do not override the fundamental rights and freedoms of data subjects.
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">4. Application Review and Response Framework</h2>
-            
+          <ExpandableSection id="review" title="4. Application Review and Response Framework">
             <h3 className="text-lg font-medium mb-3 text-foreground">4.1 Operational Constraints</h3>
             <p className="mb-4 leading-relaxed">
               Prospective applicants should be aware that DYPS currently operates with limited human resources and administrative capacity. Consequently, during periods of high application volume or operational demands, we may be unable to provide individual responses to all applicants within standard timeframes. While we endeavour to review and process all applications received, response times may vary significantly based on operational circumstances beyond our immediate control.
@@ -83,11 +111,9 @@ export default function DataRetention() {
             <p className="mb-4 leading-relaxed">
               The submission of an application does not create any obligation on our part to provide a substantive response or feedback. Our ability to respond to applications is subject to available resources and operational priorities.
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">5. Data Retention Periods and Disposal</h2>
-            
+          <ExpandableSection id="retention" title="5. Data Retention Periods and Disposal">
             <h3 className="text-lg font-medium mb-3 text-foreground">5.1 Successful Applications</h3>
             <p className="mb-4 leading-relaxed">Where an application results in successful admission to membership:</p>
             <ul className="list-disc pl-6 space-y-2 mb-6">
@@ -125,11 +151,9 @@ export default function DataRetention() {
               <li>Subject to periodic review at six-month intervals to determine whether continued retention remains necessary and proportionate;</li>
               <li>Permanently deleted when no longer required for protective purposes.</li>
             </ol>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">6. Third-Party Data Processors and International Transfers</h2>
-            
+          <ExpandableSection id="processors" title="6. Third-Party Data Processors and International Transfers">
             <h3 className="text-lg font-medium mb-3 text-foreground">6.1 Email Communications</h3>
             <p className="mb-4 leading-relaxed">
               For the purpose of sending automated email communications, including application confirmations and status updates, we utilise NodeMailer technology in conjunction with Gmail services provided by Google LLC. Google LLC operates under appropriate data protection frameworks and maintains suitable technical and organisational measures for the protection of personal data.
@@ -142,17 +166,16 @@ export default function DataRetention() {
 
             <h3 className="text-lg font-medium mb-3 text-foreground">6.3 Website Hosting</h3>
             <p className="mb-4 leading-relaxed">
-              Our website and associated application infrastructure are hosted by GoDaddy Operating Company, LLC ("<strong>GoDaddy</strong>"). GoDaddy maintains industry-standard security measures and operates in compliance with applicable data protection requirements.
+              Our website and associated application infrastructure are hosted by Railway App ("<strong>Railway</strong>"). Railway maintains industry-standard security measures and operates in compliance with applicable data protection requirements.
             </p>
 
             <h3 className="text-lg font-medium mb-3 text-foreground">6.4 Processor Obligations</h3>
             <p className="mb-4 leading-relaxed">
               All third-party service providers acting as data processors on our behalf are selected based on their ability to provide sufficient guarantees regarding the implementation of appropriate technical and organisational measures. Where applicable, we maintain written agreements with such processors that meet the requirements of Article 28 of the UK GDPR.
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">7. Data Security and Protection Measures</h2>
+          <ExpandableSection id="security" title="7. Data Security and Protection Measures">
             <p className="mb-4 leading-relaxed">
               We implement and maintain appropriate technical and organisational measures designed to ensure a level of security appropriate to the risk of processing, taking into account the state of the art, implementation costs, and the nature, scope, context, and purposes of processing. These measures include:
             </p>
@@ -163,10 +186,9 @@ export default function DataRetention() {
               <li>Access controls and authentication procedures for personnel handling personal data;</li>
               <li>Incident response and breach notification procedures.</li>
             </ul>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">8. Data Subject Contact and Enquiries</h2>
+          <ExpandableSection id="contact" title="8. Data Subject Contact and Enquiries">
             <p className="mb-4 leading-relaxed">
               Any enquiries regarding this Policy, our data processing activities, or requests relating to personal data should be directed to our designated data protection contact:
             </p>
@@ -176,10 +198,9 @@ export default function DataRetention() {
             <p className="mb-4 leading-relaxed">
               We endeavour to respond to all data protection enquiries within the timeframes prescribed by applicable legislation, typically within thirty (30) calendar days of receipt.
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">9. Regulatory Oversight and Complaints</h2>
+          <ExpandableSection id="complaints" title="9. Regulatory Oversight and Complaints">
             <p className="mb-4 leading-relaxed">
               Data subjects who believe that our processing of their personal data does not comply with applicable data protection legislation have the right to lodge a complaint with the Information Commissioner's Office, the UK's supervisory authority for data protection matters.
             </p>
@@ -189,21 +210,19 @@ export default function DataRetention() {
               <strong>Telephone:</strong> 0303 123 1113<br />
               <strong>Postal Address:</strong> Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire SK9 5AF
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">10. Policy Amendments and Updates</h2>
+          <ExpandableSection id="amendments" title="10. Policy Amendments and Updates">
             <p className="mb-4 leading-relaxed">
               This Policy may be updated from time to time to reflect changes in our processing activities, legal requirements, or operational procedures. Any material changes will be communicated through publication of a revised version on our website, with the effective date clearly indicated. Continued use of our services following such updates shall constitute acceptance of the revised terms.
             </p>
-          </section>
+          </ExpandableSection>
 
-          <section>
-            <h2 className="text-xl font-semibold mb-4 text-foreground">11. Interpretation and Governing Law</h2>
+          <ExpandableSection id="law" title="11. Interpretation and Governing Law">
             <p className="mb-4 leading-relaxed">
               This Policy shall be interpreted in accordance with the laws of England and Wales. Any disputes arising in connection with this Policy or our data processing activities shall be subject to the exclusive jurisdiction of the courts of England and Wales.
             </p>
-          </section>
+          </ExpandableSection>
 
           <hr className="my-8 border-border" />
           
