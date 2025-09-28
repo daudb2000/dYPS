@@ -244,9 +244,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         testEmailConnectionLoaded: typeof testEmailConnection === 'function',
         environment: {
           nodeEnv: process.env.NODE_ENV,
-          emailjsPublicKey: process.env.EMAILJS_PUBLIC_KEY ? 'SET' : 'NOT_SET',
-          formspreeEndpoint: process.env.FORMSPREE_ENDPOINT ? 'SET' : 'NOT_SET',
-          testEmailOverride: process.env.TEST_EMAIL_OVERRIDE ? 'SET' : 'NOT_SET'
+          emailUser: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
+          emailPassword: process.env.EMAIL_PASSWORD ? 'SET' : 'NOT_SET',
+          adminEmail: process.env.ADMIN_EMAIL ? 'SET' : 'NOT_SET'
         }
       };
 
