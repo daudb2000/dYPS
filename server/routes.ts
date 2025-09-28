@@ -234,40 +234,72 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // GET /api/email-service-status - Check email service status (public)
+  // GET /api/email-service-status - Enhanced email service status (public)
   app.get("/api/email-service-status", async (req, res) => {
     try {
       console.log('🔍 Email service status check requested');
 
+      // Run comprehensive email service test
+      const testResults = await testEmailConnection();
+
       const status = {
         emailServiceLoaded: typeof sendApplicationNotification === 'function',
         testEmailConnectionLoaded: typeof testEmailConnection === 'function',
+        timestamp: new Date().toISOString(),
         environment: {
           nodeEnv: process.env.NODE_ENV,
           emailUser: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
           emailPassword: process.env.EMAIL_PASSWORD ? 'SET' : 'NOT_SET',
           adminEmail: process.env.ADMIN_EMAIL ? 'SET' : 'NOT_SET',
-          formspreeEndpoint: process.env.FORMSPREE_ENDPOINT ? 'SET' : 'DEFAULT'
+          formspreeEndpoint: process.env.FORMSPREE_ENDPOINT ? 'SET' : 'DEFAULT',
+          resendApiKey: process.env.RESEND_API_KEY ? 'SET' : 'NOT_SET',
+          sendgridApiKey: process.env.SENDGRID_API_KEY ? 'SET' : 'NOT_SET'
         },
         services: {
           gmail: {
             configured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASSWORD),
-            primary: true
+            status: testResults.details.gmail?.success ? 'WORKING' : 'FAILED',
+            details: testResults.details.gmail
+          },
+          resend: {
+            configured: !!process.env.RESEND_API_KEY,
+            status: testResults.details.resend?.success ? 'WORKING' : 'NOT_CONFIGURED',
+            details: testResults.details.resend
+          },
+          sendgrid: {
+            configured: !!process.env.SENDGRID_API_KEY,
+            status: testResults.details.sendgrid?.success ? 'WORKING' : 'NOT_CONFIGURED',
+            details: testResults.details.sendgrid
           },
           formspree: {
             configured: true,
             endpoint: process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq',
-            fallback: true
+            status: testResults.details.formspree?.success ? 'WORKING' : 'FAILED',
+            details: testResults.details.formspree
           },
           logging: {
             configured: true,
+            status: 'ALWAYS_AVAILABLE',
             finalFallback: true
           }
+        },
+        summary: testResults.summary,
+        workingServices: testResults.workingServices,
+        primaryService: testResults.method,
+        recommendations: {
+          production: testResults.workingServices.length === 0
+            ? 'Configure at least one email service immediately'
+            : testResults.workingServices.length === 1
+            ? 'Add additional email services for redundancy'
+            : 'Email system has good redundancy',
+          development: process.env.NODE_ENV !== 'production'
+            ? 'Configure Gmail SMTP for development testing'
+            : 'N/A'
         }
       };
 
-      console.log('📊 Email service status:', JSON.stringify(status, null, 2));
-      res.json({ success: true, status });
+      console.log('📊 Enhanced email service status:', JSON.stringify(status, null, 2));
+      res.json({ success: true, status, testResults });
     } catch (error) {
       console.error('❌ Email service status check failed:', error);
       res.status(500).json({
