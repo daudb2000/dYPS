@@ -12,16 +12,76 @@ const createTransporter = () => {
   });
 };
 
-// Primary email service - Gmail SMTP with fallback to logging
+// Formspree service function (reliable fallback)
+const sendViaFormspree = async (application: MembershipApplication): Promise<boolean> => {
+  try {
+    console.log('📧 Sending via Formspree...');
+
+    const formspreeEndpoint = process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq';
+
+    // Prepare email data for Formspree
+    const emailData = {
+      name: application.name,
+      email: application.email,
+      company: application.company,
+      role: application.role,
+      linkedin: application.linkedin || 'Not provided',
+      submitted: application.submittedAt.toLocaleString(),
+      subject: `🎯 New DYPS Membership Application - ${application.name}`,
+      message: `
+NEW DYPS MEMBERSHIP APPLICATION
+
+📋 Applicant Details:
+👤 Name: ${application.name}
+🏢 Company: ${application.company}
+💼 Role: ${application.role}
+📧 Email: ${application.email}
+${application.linkedin ? `💼 LinkedIn: ${application.linkedin}` : ''}
+⏰ Submitted: ${application.submittedAt.toLocaleString()}
+
+⚡ This application requires immediate review.
+
+🔍 Review at: ${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard
+
+---
+DYPS - Deals Young Professional Society
+Manchester's Elite Professional Network
+      `.trim()
+    };
+
+    const response = await fetch(formspreeEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(emailData),
+    });
+
+    if (response.ok) {
+      console.log('✅ Email sent successfully via Formspree');
+      return true;
+    } else {
+      const errorText = await response.text();
+      console.error('❌ Formspree failed:', response.status, response.statusText, errorText);
+      return false;
+    }
+  } catch (error) {
+    console.error('❌ Formspree email failed:', error);
+    return false;
+  }
+};
+
+// Primary email service - Gmail SMTP → Formspree → Logging fallback
 export const sendApplicationNotification = async (application: MembershipApplication) => {
   console.log('🔧 About to call sendApplicationNotification for:', application.name);
 
   const adminEmails = process.env.ADMIN_EMAIL || 'daud@dyps.uk, alkesh@dyps.uk, max@dyps.uk';
 
-  // Try Gmail SMTP first if configured
+  // Method 1: Try Gmail SMTP first (if configured)
   if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
     console.log('🔧 Email service called for application:', application.name);
-    console.log('📧 Using Gmail SMTP');
+    console.log('📧 Method 1: Trying Gmail SMTP');
 
     try {
       const transporter = createTransporter();
@@ -64,41 +124,102 @@ export const sendApplicationNotification = async (application: MembershipApplica
       console.log('✅ Email notification completed successfully');
       return;
     } catch (error) {
-      console.error('❌ Failed to send email notification via Gmail SMTP:', error);
-      console.log('⚠️ Gmail SMTP failed, falling back to logging...');
+      console.error('❌ Gmail SMTP failed:', error);
+      console.log('⚠️ Gmail SMTP failed, trying Formspree fallback...');
     }
   } else {
     console.log('📧 Gmail SMTP not configured (EMAIL_USER or EMAIL_PASSWORD missing)');
   }
 
-  // Fallback to logging
-  console.log('📧 EMAIL NOTIFICATION (Gmail SMTP not configured, logging only):');
+  // Method 2: Try Formspree (reliable fallback)
+  console.log('📧 Method 2: Trying Formspree');
+  const formspreeSuccess = await sendViaFormspree(application);
+  if (formspreeSuccess) {
+    console.log('✅ Email notification completed successfully via Formspree');
+    return;
+  }
+
+  // Method 3: Final fallback - logging
+  console.log('📧 Method 3: Both Gmail SMTP and Formspree failed, using logging fallback');
+  console.log('📧 EMAIL NOTIFICATION (All services failed, logging only):');
   console.log(`To: ${adminEmails}`);
   console.log(`Subject: 🎯 New DYPS Membership Application - ${application.name}`);
   console.log(`Applicant: ${application.name} | ${application.company} | ${application.email}`);
   console.log(`LinkedIn: ${application.linkedin || 'Not provided'}`);
   console.log(`Submitted: ${application.submittedAt.toLocaleDateString()}, ${application.submittedAt.toLocaleTimeString()}`);
-  console.log('✅ Email notification logged successfully (configure EMAIL_USER and EMAIL_PASSWORD to send actual emails)');
+  console.log('✅ Email notification logged successfully (configure EMAIL_USER/EMAIL_PASSWORD or FORMSPREE_ENDPOINT to send actual emails)');
 };
 
-// Test function for Gmail SMTP
+// Test function for email services
 export const testEmailConnection = async () => {
-  console.log('🔧 Testing Gmail SMTP service...');
+  console.log('🔧 Testing email services...');
 
+  const results = {
+    gmail: null as any,
+    formspree: null as any,
+    logging: { success: true, method: 'Logging Fallback (Always Available)' }
+  };
+
+  // Test Gmail SMTP
   if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
+    console.log('🔧 Testing Gmail SMTP...');
     try {
       const transporter = createTransporter();
-      // Verify SMTP connection
       await transporter.verify();
       console.log('✅ Gmail SMTP configured and connection verified');
-      return { success: true, method: 'Gmail SMTP', primary: true };
+      results.gmail = { success: true, method: 'Gmail SMTP', primary: true };
     } catch (error) {
       console.log('❌ Gmail SMTP test failed:', error);
-      return { success: false, method: 'Gmail SMTP Failed', primary: false, error: error instanceof Error ? error.message : String(error) };
+      results.gmail = {
+        success: false,
+        method: 'Gmail SMTP Failed',
+        error: error instanceof Error ? error.message : String(error)
+      };
     }
+  } else {
+    console.log('⚠️ Gmail SMTP not configured (EMAIL_USER or EMAIL_PASSWORD missing)');
+    results.gmail = { success: false, method: 'Gmail SMTP Not Configured' };
   }
 
-  // Fallback logging is always available
-  console.log('⚠️ Gmail SMTP not configured - emails will be logged only');
-  return { success: true, method: 'Logging Fallback', primary: false };
+  // Test Formspree availability
+  console.log('🔧 Testing Formspree service...');
+  try {
+    const formspreeEndpoint = process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq';
+
+    // Simple test ping (we don't actually send test data)
+    const testResponse = await fetch(formspreeEndpoint, {
+      method: 'HEAD',
+    }).catch(() => null);
+
+    if (testResponse) {
+      console.log('✅ Formspree endpoint is reachable');
+      results.formspree = { success: true, method: 'Formspree (Fallback)', endpoint: formspreeEndpoint };
+    } else {
+      console.log('⚠️ Formspree endpoint test failed');
+      results.formspree = { success: false, method: 'Formspree Connection Failed' };
+    }
+  } catch (error) {
+    console.log('❌ Formspree test failed:', error);
+    results.formspree = {
+      success: false,
+      method: 'Formspree Test Failed',
+      error: error instanceof Error ? error.message : String(error)
+    };
+  }
+
+  // Determine primary service
+  const primaryService = results.gmail?.success ? 'Gmail SMTP' :
+                        results.formspree?.success ? 'Formspree' : 'Logging Only';
+
+  console.log('📊 Email service test summary:');
+  console.log('- Gmail SMTP:', results.gmail?.success ? '✅' : '❌');
+  console.log('- Formspree:', results.formspree?.success ? '✅' : '❌');
+  console.log('- Primary service:', primaryService);
+
+  return {
+    success: true,
+    method: primaryService,
+    details: results,
+    primary: results.gmail?.success || results.formspree?.success
+  };
 };

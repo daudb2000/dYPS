@@ -246,7 +246,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
           nodeEnv: process.env.NODE_ENV,
           emailUser: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
           emailPassword: process.env.EMAIL_PASSWORD ? 'SET' : 'NOT_SET',
-          adminEmail: process.env.ADMIN_EMAIL ? 'SET' : 'NOT_SET'
+          adminEmail: process.env.ADMIN_EMAIL ? 'SET' : 'NOT_SET',
+          formspreeEndpoint: process.env.FORMSPREE_ENDPOINT ? 'SET' : 'DEFAULT'
+        },
+        services: {
+          gmail: {
+            configured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASSWORD),
+            primary: true
+          },
+          formspree: {
+            configured: true,
+            endpoint: process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq',
+            fallback: true
+          },
+          logging: {
+            configured: true,
+            finalFallback: true
+          }
         }
       };
 
