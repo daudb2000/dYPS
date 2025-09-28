@@ -18,20 +18,17 @@ declare module 'express-session' {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup session middleware
   const isProduction = process.env.NODE_ENV === 'production';
-  const memoryStoreInstance = isProduction ? MemoryStore(session) : undefined;
 
   app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+    secret: process.env.SESSION_SECRET || 'dyps-session-secret-2024',
     resave: false,
     saveUninitialized: false,
-    store: isProduction ? new memoryStoreInstance({
-      checkPeriod: 86400000 // prune expired entries every 24h
-    }) : undefined,
+    name: 'dyps-session',
     cookie: {
-      secure: isProduction, // Use secure cookies in production (HTTPS required)
-      httpOnly: true, // Prevent XSS attacks
+      secure: false, // Set to false for Railway (they handle HTTPS termination)
+      httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: isProduction ? 'strict' : 'lax' // CSRF protection
+      sameSite: 'lax'
     }
   }));
   // POST /api/membership-applications - Submit membership application
@@ -77,11 +74,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin authentication middleware
+  // Admin authentication middleware with debugging
   const requireAdmin = (req: Request, res: Response, next: Function) => {
+    console.log('🔍 Admin auth check:', {
+      hasSession: !!req.session,
+      sessionId: req.sessionID,
+      isAdmin: req.session?.isAdmin,
+      adminUsername: req.session?.adminUsername,
+      cookies: req.headers.cookie ? 'Present' : 'Missing'
+    });
+
     if (!req.session?.isAdmin) {
+      console.log('❌ Admin access denied - session not admin');
       return res.status(401).json({ success: false, message: "Admin access required" });
     }
+
+    console.log('✅ Admin access granted for:', req.session.adminUsername);
     next();
   };
 
@@ -89,6 +97,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
+      console.log('🔐 Admin login attempt for username:', username);
 
       // Admin credentials from environment variables
       const adminUsername = process.env.ADMIN_USERNAME || "admin";
@@ -97,11 +106,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (username === adminUsername && password === adminPassword) {
         req.session.isAdmin = true;
         req.session.adminUsername = username;
+        console.log('✅ Admin login successful, session:', {
+          sessionId: req.sessionID,
+          isAdmin: req.session.isAdmin,
+          adminUsername: req.session.adminUsername
+        });
         res.json({ success: true, message: "Login successful" });
       } else {
+        console.log('❌ Admin login failed - invalid credentials');
         res.status(401).json({ success: false, message: "Invalid credentials" });
       }
     } catch (error) {
+      console.log('❌ Admin login error:', error);
       res.status(500).json({ success: false, message: "Internal server error" });
     }
   });
