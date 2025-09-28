@@ -18,6 +18,11 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/data-retention" component={DataRetention} />
       <Route path="/application-submitted" component={ApplicationSubmitted} />
+      <Route path="/admin" component={() => {
+        // Redirect /admin to /admin/login for easier access
+        window.location.replace('/admin/login');
+        return null;
+      }} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin/dashboard" component={AdminDashboard} />
       <Route path="/admin/accepted" component={AdminAccepted} />

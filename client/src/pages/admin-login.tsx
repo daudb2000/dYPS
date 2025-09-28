@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -21,6 +21,34 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function AdminLogin() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+
+  // Check for bypass query parameter on component mount
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const bypass = urlParams.get('bypass');
+
+    if (bypass === 'dyps2024') {
+      // Call bypass API to authenticate
+      fetch('/api/admin/bypass?key=dyps2024', { method: 'GET' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            toast({
+              title: "Admin Access Granted",
+              description: "Bypassing login for admin access.",
+            });
+            setLocation("/admin/dashboard");
+          }
+        })
+        .catch(() => {
+          toast({
+            title: "Bypass Failed",
+            description: "Please use regular login.",
+            variant: "destructive",
+          });
+        });
+    }
+  }, [setLocation, toast]);
 
   const form = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
