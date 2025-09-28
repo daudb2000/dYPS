@@ -18,15 +18,15 @@ const createTransporter = () => {
   });
 };
 
-// Formspree service function (reliable fallback)
+// Formspree AJAX service function (free plan compatible)
 const sendViaFormspree = async (application: MembershipApplication): Promise<boolean> => {
   try {
-    console.log('📧 Sending via Formspree...');
+    console.log('📧 Sending via Formspree (AJAX)...');
 
     const formspreeEndpoint = process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq';
 
-    // Prepare email data for Formspree
-    const emailData = {
+    // Prepare form data for Formspree AJAX (form-encoded, not JSON)
+    const formData = new URLSearchParams({
       name: application.name,
       email: application.email,
       company: application.company,
@@ -53,27 +53,27 @@ ${application.linkedin ? `💼 LinkedIn: ${application.linkedin}` : ''}
 DYPS - Deals Young Professional Society
 Manchester's Elite Professional Network
       `.trim()
-    };
+    });
 
     const response = await fetch(formspreeEndpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json'
       },
-      body: JSON.stringify(emailData),
+      body: formData.toString(),
     });
 
     if (response.ok) {
-      console.log('✅ Email sent successfully via Formspree');
+      console.log('✅ Email sent successfully via Formspree AJAX');
       return true;
     } else {
       const errorText = await response.text();
-      console.error('❌ Formspree failed:', response.status, response.statusText, errorText);
+      console.error('❌ Formspree AJAX failed:', response.status, response.statusText, errorText);
       return false;
     }
   } catch (error) {
-    console.error('❌ Formspree email failed:', error);
+    console.error('❌ Formspree AJAX email failed:', error);
     return false;
   }
 };
@@ -87,13 +87,13 @@ export const sendApplicationNotification = async (application: MembershipApplica
 
   // Railway optimization: Skip Gmail SMTP in production (ports often blocked)
   if (isProduction) {
-    console.log('📧 Production mode: Using Formspree for reliable delivery');
+    console.log('📧 Production mode: Using Formspree AJAX for reliable delivery');
     const formspreeSuccess = await sendViaFormspree(application);
     if (formspreeSuccess) {
-      console.log('✅ Email notification completed successfully via Formspree');
+      console.log('✅ Email notification completed successfully via Formspree AJAX');
       return;
     }
-    console.log('❌ Formspree failed, falling back to logging');
+    console.log('❌ Formspree AJAX failed, falling back to logging');
   } else {
     // Method 1: Try Gmail SMTP first (development only)
     if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
@@ -147,11 +147,11 @@ export const sendApplicationNotification = async (application: MembershipApplica
       console.log('📧 Gmail SMTP not configured (EMAIL_USER or EMAIL_PASSWORD missing)');
     }
 
-    // Development fallback: Try Formspree
-    console.log('📧 Method 2: Trying Formspree');
+    // Development fallback: Try Formspree AJAX
+    console.log('📧 Method 2: Trying Formspree AJAX');
     const formspreeSuccess = await sendViaFormspree(application);
     if (formspreeSuccess) {
-      console.log('✅ Email notification completed successfully via Formspree');
+      console.log('✅ Email notification completed successfully via Formspree AJAX');
       return;
     }
   }
@@ -164,7 +164,7 @@ export const sendApplicationNotification = async (application: MembershipApplica
   console.log(`Applicant: ${application.name} | ${application.company} | ${application.email}`);
   console.log(`LinkedIn: ${application.linkedin || 'Not provided'}`);
   console.log(`Submitted: ${application.submittedAt.toLocaleDateString()}, ${application.submittedAt.toLocaleTimeString()}`);
-  console.log('✅ Email notification logged successfully (Production: Formspree recommended, Development: configure EMAIL_USER/EMAIL_PASSWORD for Gmail SMTP)');
+  console.log('✅ Email notification logged successfully (Production: Formspree AJAX used, Development: configure EMAIL_USER/EMAIL_PASSWORD for Gmail SMTP)');
 };
 
 // Test function for email services
