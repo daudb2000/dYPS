@@ -86,6 +86,8 @@ app.use((req, res, next) => {
   const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1';
 
   server.listen(port, host, () => {
-    log(`serving on port ${port}`);
+    log(`✅ Database tables initialized`);
+    log(`🚀 DYPS server running on port ${port}`);
+    log(`📧 Email service: Production logging mode (Railway compatible)`);
   });
 })();
