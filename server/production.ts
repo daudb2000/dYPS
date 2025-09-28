@@ -24,7 +24,10 @@ function serveStatic(app: express.Express) {
     if (fs.existsSync(altPath)) {
       log(`Using alternative static path: ${altPath}`);
       app.use(express.static(altPath));
-      app.use("*", (_req, res) => {
+      app.use((req, res, next) => {
+        if (req.path.startsWith('/api')) {
+          return next(); // Let API routes handle themselves
+        }
         res.sendFile(path.resolve(altPath, "index.html"));
       });
       return;
@@ -37,8 +40,11 @@ function serveStatic(app: express.Express) {
   log(`Serving static files from: ${distPath}`);
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
-  app.use("*", (_req, res) => {
+  // fall through to index.html if the file doesn't exist (except for API routes)
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next(); // Let API routes handle themselves
+    }
     res.sendFile(path.resolve(distPath, "index.html"));
   });
 }

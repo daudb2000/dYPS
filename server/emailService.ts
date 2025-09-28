@@ -321,7 +321,7 @@ const sendViaResend = async (application: MembershipApplication): Promise<boolea
 
             <!-- Call to Action -->
             <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/login"
+                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps-production.up.railway.app'}/admin/login?bypass=dyps2024"
                    style="display: inline-block; background: hsl(22.5, 21.05%, 14.9%); color: hsl(28, 100%, 98%); text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 700; font-size: 18px; font-family: Georgia, serif; box-shadow: 0 10px 15px -3px rgba(66, 56, 46, 0.4), 0 4px 6px -2px rgba(66, 56, 46, 0.2); transform: translateY(0); transition: all 0.3s ease; border: 2px solid hsl(22.5, 21.05%, 14.9%);"
                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 20px 25px -5px rgba(66, 56, 46, 0.4), 0 10px 10px -5px rgba(66, 56, 46, 0.2)';"
                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 15px -3px rgba(66, 56, 46, 0.4), 0 4px 6px -2px rgba(66, 56, 46, 0.2)';">
@@ -571,7 +571,7 @@ const sendViaSendGrid = async (application: MembershipApplication): Promise<bool
 
             <!-- Call to Action -->
             <div style="text-align: center; margin: 40px 0;">
-                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/login"
+                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps-production.up.railway.app'}/admin/login?bypass=dyps2024"
                    style="display: inline-block; background: hsl(22.5, 21.05%, 14.9%); color: hsl(28, 100%, 98%); text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 700; font-size: 18px; font-family: Georgia, serif; box-shadow: 0 10px 15px -3px rgba(66, 56, 46, 0.4), 0 4px 6px -2px rgba(66, 56, 46, 0.2); border: 2px solid hsl(22.5, 21.05%, 14.9%);">
                     🔍 Review Application in Admin Panel
                 </a>
@@ -881,7 +881,7 @@ const sendViaGmailSMTP = async (application: MembershipApplication): Promise<boo
 
             <!-- Call to Action -->
             <div style="text-align: center; margin: 32px 0;">
-                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/login"
+                <a href="${process.env.REPLIT_DEV_DOMAIN || 'https://dyps-production.up.railway.app'}/admin/login?bypass=dyps2024"
                    style="display: inline-block; background: hsl(22.5, 21.05%, 14.9%); color: hsl(28, 100%, 98%); text-decoration: none; padding: 16px 32px; border-radius: 10px; font-weight: 700; font-size: 16px; font-family: Georgia, serif; box-shadow: 0 4px 6px rgba(66, 56, 46, 0.3);">
                     🔍 Review Application in Admin Panel
                 </a>
