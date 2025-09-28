@@ -234,7 +234,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // GET /api/email-service-status - Enhanced email service status (public)
+  // GET /api/email-service-status - Enhanced email service status with advanced monitoring (public)
   app.get("/api/email-service-status", async (req, res) => {
     try {
       console.log('🔍 Email service status check requested');
@@ -242,12 +242,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Run comprehensive email service test
       const testResults = await testEmailConnection();
 
+      // Calculate health score
+      const workingServicesCount = testResults.workingServices.length;
+      const totalServices = 4; // Gmail, Resend, SendGrid, Formspree
+      const healthScore = Math.round((workingServicesCount / totalServices) * 100);
+
+      // Determine system health
+      let systemHealth: 'EXCELLENT' | 'GOOD' | 'WARNING' | 'CRITICAL';
+      if (workingServicesCount >= 3) systemHealth = 'EXCELLENT';
+      else if (workingServicesCount >= 2) systemHealth = 'GOOD';
+      else if (workingServicesCount >= 1) systemHealth = 'WARNING';
+      else systemHealth = 'CRITICAL';
+
       const status = {
         emailServiceLoaded: typeof sendApplicationNotification === 'function',
         testEmailConnectionLoaded: typeof testEmailConnection === 'function',
         timestamp: new Date().toISOString(),
+        systemHealth: {
+          status: systemHealth,
+          score: healthScore,
+          workingServices: workingServicesCount,
+          totalServices: totalServices,
+          lastCheck: new Date().toISOString(),
+          uptime: process.uptime(),
+          memoryUsage: process.memoryUsage()
+        },
         environment: {
           nodeEnv: process.env.NODE_ENV,
+          platform: process.platform,
+          nodeVersion: process.version,
           emailUser: process.env.EMAIL_USER ? 'SET' : 'NOT_SET',
           emailPassword: process.env.EMAIL_PASSWORD ? 'SET' : 'NOT_SET',
           adminEmail: process.env.ADMIN_EMAIL ? 'SET' : 'NOT_SET',
@@ -259,42 +282,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
           gmail: {
             configured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASSWORD),
             status: testResults.details.gmail?.success ? 'WORKING' : 'FAILED',
-            details: testResults.details.gmail
+            priority: process.env.NODE_ENV === 'production' ? 4 : 1,
+            details: testResults.details.gmail,
+            lastTest: new Date().toISOString()
           },
           resend: {
             configured: !!process.env.RESEND_API_KEY,
-            status: testResults.details.resend?.success ? 'WORKING' : 'NOT_CONFIGURED',
-            details: testResults.details.resend
+            status: testResults.details.resend?.success ? 'WORKING' : (process.env.RESEND_API_KEY ? 'FAILED' : 'NOT_CONFIGURED'),
+            priority: process.env.NODE_ENV === 'production' ? 1 : 2,
+            details: testResults.details.resend,
+            lastTest: new Date().toISOString(),
+            features: ['Premium Templates', 'High Deliverability', 'Analytics']
           },
           sendgrid: {
             configured: !!process.env.SENDGRID_API_KEY,
-            status: testResults.details.sendgrid?.success ? 'WORKING' : 'NOT_CONFIGURED',
-            details: testResults.details.sendgrid
+            status: testResults.details.sendgrid?.success ? 'WORKING' : (process.env.SENDGRID_API_KEY ? 'FAILED' : 'NOT_CONFIGURED'),
+            priority: process.env.NODE_ENV === 'production' ? 2 : 3,
+            details: testResults.details.sendgrid,
+            lastTest: new Date().toISOString(),
+            features: ['Enterprise Features', 'Advanced Analytics', 'High Volume']
           },
           formspree: {
             configured: true,
             endpoint: process.env.FORMSPREE_ENDPOINT || 'https://formspree.io/f/mzzjprzq',
             status: testResults.details.formspree?.success ? 'WORKING' : 'FAILED',
-            details: testResults.details.formspree
+            priority: process.env.NODE_ENV === 'production' ? 3 : 4,
+            details: testResults.details.formspree,
+            lastTest: new Date().toISOString(),
+            limitations: ['50 submissions/month (free plan)', 'No custom templates']
           },
           logging: {
             configured: true,
             status: 'ALWAYS_AVAILABLE',
-            finalFallback: true
+            priority: 5,
+            finalFallback: true,
+            features: ['Detailed Error Logs', 'Application Data Backup', 'Admin Notifications']
+          }
+        },
+        monitoring: {
+          alerting: {
+            criticalThreshold: workingServicesCount === 0,
+            warningThreshold: workingServicesCount <= 1,
+            alerts: workingServicesCount === 0 ? ['CRITICAL: All email services failed'] :
+                   workingServicesCount <= 1 ? ['WARNING: Only one email service working'] : []
+          },
+          metrics: {
+            totalApplicationsProcessed: 'Available via admin API',
+            emailSuccessRate: 'Tracked in logs',
+            averageResponseTime: 'Monitored per service'
+          },
+          recommendations: {
+            immediate: workingServicesCount === 0 ? 'CRITICAL: Configure email services immediately' : null,
+            shortTerm: workingServicesCount <= 1 ? 'Add backup email services for redundancy' : null,
+            longTerm: !process.env.RESEND_API_KEY && !process.env.SENDGRID_API_KEY ?
+              'Consider premium email service for better deliverability' : null
           }
         },
         summary: testResults.summary,
         workingServices: testResults.workingServices,
         primaryService: testResults.method,
-        recommendations: {
-          production: testResults.workingServices.length === 0
-            ? 'Configure at least one email service immediately'
-            : testResults.workingServices.length === 1
-            ? 'Add additional email services for redundancy'
-            : 'Email system has good redundancy',
-          development: process.env.NODE_ENV !== 'production'
-            ? 'Configure Gmail SMTP for development testing'
-            : 'N/A'
+        fallbackChain: testResults.workingServices.length > 1 ?
+          `${testResults.workingServices[0]} → ${testResults.workingServices.slice(1).join(' → ')}` :
+          testResults.workingServices[0] || 'Logging Only',
+        deployment: {
+          ready: workingServicesCount > 0,
+          confidence: systemHealth === 'EXCELLENT' ? 'High' :
+                     systemHealth === 'GOOD' ? 'Medium' :
+                     systemHealth === 'WARNING' ? 'Low' : 'Critical',
+          recommendations: {
+            production: testResults.workingServices.length === 0
+              ? 'DO NOT DEPLOY - Configure email services first'
+              : testResults.workingServices.length === 1
+              ? 'CAUTION - Single point of failure, add redundancy'
+              : 'READY - Multiple email services configured',
+            development: process.env.NODE_ENV !== 'production'
+              ? 'Configure Gmail SMTP for local development'
+              : 'N/A'
+          }
         }
       };
 
@@ -305,7 +369,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({
         success: false,
         message: 'Status check failed',
+        error: error instanceof Error ? error.message : String(error),
+        systemHealth: {
+          status: 'CRITICAL',
+          score: 0,
+          issue: 'Status check system failure'
+        }
+      });
+    }
+  });
+
+  // GET /api/email-health - Simple health check endpoint for monitoring tools
+  app.get("/api/email-health", async (req, res) => {
+    try {
+      const testResults = await testEmailConnection();
+      const workingServicesCount = testResults.workingServices.length;
+
+      if (workingServicesCount === 0) {
+        return res.status(503).json({
+          status: 'CRITICAL',
+          healthy: false,
+          services: 0,
+          message: 'All email services failed'
+        });
+      }
+
+      if (workingServicesCount <= 1) {
+        return res.status(200).json({
+          status: 'WARNING',
+          healthy: true,
+          services: workingServicesCount,
+          message: 'Limited email service availability'
+        });
+      }
+
+      res.status(200).json({
+        status: 'HEALTHY',
+        healthy: true,
+        services: workingServicesCount,
+        message: 'Email services operational'
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'ERROR',
+        healthy: false,
+        services: 0,
+        message: 'Health check failed',
         error: error instanceof Error ? error.message : String(error)
+      });
+    }
+  });
+
+  // GET /api/email-metrics - Advanced metrics for monitoring dashboards
+  app.get("/api/email-metrics", async (req, res) => {
+    try {
+      const testResults = await testEmailConnection();
+      const workingServicesCount = testResults.workingServices.length;
+
+      // Get basic system metrics
+      const memoryUsage = process.memoryUsage();
+      const uptime = process.uptime();
+
+      const metrics = {
+        timestamp: new Date().toISOString(),
+        email_services: {
+          total_configured: 4,
+          working_services: workingServicesCount,
+          health_score: Math.round((workingServicesCount / 4) * 100),
+          primary_service: testResults.method,
+          services_status: {
+            gmail_smtp: testResults.details.gmail?.success ? 1 : 0,
+            resend_api: testResults.details.resend?.success ? 1 : 0,
+            sendgrid_api: testResults.details.sendgrid?.success ? 1 : 0,
+            formspree: testResults.details.formspree?.success ? 1 : 0
+          }
+        },
+        system: {
+          uptime_seconds: Math.floor(uptime),
+          memory_usage_mb: Math.round(memoryUsage.used / 1024 / 1024),
+          memory_heap_mb: Math.round(memoryUsage.heapUsed / 1024 / 1024),
+          node_version: process.version,
+          environment: process.env.NODE_ENV
+        },
+        configuration: {
+          gmail_configured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASSWORD),
+          resend_configured: !!process.env.RESEND_API_KEY,
+          sendgrid_configured: !!process.env.SENDGRID_API_KEY,
+          formspree_configured: true,
+          admin_emails_configured: !!process.env.ADMIN_EMAIL
+        },
+        alerts: {
+          critical_alerts: workingServicesCount === 0 ? 1 : 0,
+          warning_alerts: (workingServicesCount > 0 && workingServicesCount <= 1) ? 1 : 0,
+          info_alerts: workingServicesCount >= 2 ? 0 : 1
+        }
+      };
+
+      res.json(metrics);
+    } catch (error) {
+      res.status(500).json({
+        error: 'Metrics collection failed',
+        message: error instanceof Error ? error.message : String(error),
+        timestamp: new Date().toISOString()
       });
     }
   });
