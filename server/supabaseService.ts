@@ -343,19 +343,35 @@ export async function createAdminUsersTable() {
 // Verify admin credentials
 export async function verifyAdminCredentials(username: string, password: string): Promise<boolean> {
   try {
+    console.log(`🔍 Verifying credentials for user: ${username}`);
     const passwordHash = hashPassword(password);
+    console.log(`🔐 Password hash: ${passwordHash.substring(0, 10)}...`);
 
-    const { data, error } = await supabase
+    // Add timeout to prevent hanging
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Supabase query timeout')), 5000);
+    });
+
+    const queryPromise = supabase
       .from('admin_users')
       .select('*')
       .eq('username', username)
       .eq('password_hash', passwordHash)
       .single();
 
-    if (error || !data) {
+    const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+
+    if (error) {
+      console.error('❌ Supabase query error:', error);
       return false;
     }
 
+    if (!data) {
+      console.log('❌ No matching user found');
+      return false;
+    }
+
+    console.log('✅ Admin credentials verified successfully');
     return true;
   } catch (error) {
     console.error('❌ Error verifying admin credentials:', error);
