@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import session from "express-session";
-import MemoryStore from "memorystore";
+import connectPgSimple from "connect-pg-simple";
 import { createServer, type Server } from "http";
 import { createApplication, getAllApplications, updateApplicationStatus, initializeDatabase, testSupabaseConnection, createApplicationsTable } from "./supabaseService";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
@@ -18,8 +18,19 @@ declare module 'express-session' {
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup session middleware
   const isProduction = process.env.NODE_ENV === 'production';
+  const PgSession = connectPgSimple(session);
+
+  // Use PostgreSQL session store if database URL is provided, otherwise use default
+  const sessionStore = process.env.DATABASE_URL
+    ? new PgSession({
+        conString: process.env.DATABASE_URL,
+        tableName: 'session',
+        createTableIfMissing: true,
+      })
+    : undefined; // Falls back to MemoryStore in dev (which is fine for local dev)
 
   app.use(session({
+    store: sessionStore,
     secret: process.env.SESSION_SECRET || 'dyps-session-secret-2024',
     resave: false,
     saveUninitialized: false,
