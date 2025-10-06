@@ -77,7 +77,7 @@ ${application.linkedin ? `💼 LinkedIn: ${application.linkedin}
 
 ⚡ This application requires immediate review.
 
-🔍 Review at: ${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard
+🔍 Review at: https://dyps.uk/admin
 
 ---
 DYPS - Deals Young Professional Society
@@ -153,7 +153,7 @@ ${application.linkedin ? `💼 LinkedIn: ${application.linkedin}
 
 ⚡ This application requires immediate review.
 
-🔍 Review at: ${process.env.REPLIT_DEV_DOMAIN || 'https://dyps.uk'}/admin/dashboard
+🔍 Review at: https://dyps.uk/admin
 
 ---
 DYPS - Deals Young Professional Society

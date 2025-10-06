@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 const supabaseUrl = process.env.SUPABASE_URL || 'https://wziukmmsnlijehdjbbwv.supabase.co';
 const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6aXVrbW1zbmxpamVoZGpiYnd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkwOTIyNjAsImV4cCI6MjA3NDY2ODI2MH0.hsgOfXG6LSuw8HputKY7IQbwjRLEiQM7ZdrmpjXpCfk';
@@ -286,5 +287,141 @@ export async function testSupabaseConnection() {
   } catch (error) {
     console.error('❌ Supabase connection test failed:', error);
     return false;
+  }
+}
+
+// Admin user interface and functions
+export interface AdminUser {
+  id: string;
+  username: string;
+  password_hash: string;
+  created_at: string;
+}
+
+// Hash password using SHA-256
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password).digest('hex');
+}
+
+// Create admin users table
+export async function createAdminUsersTable() {
+  try {
+    console.log('📝 Creating admin_users table...');
+
+    const tableCreationSQL = `
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        password_hash TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_admin_users_username ON admin_users(username);
+
+      ALTER TABLE admin_users DISABLE ROW LEVEL SECURITY;
+    `;
+
+    const { error: sqlError } = await supabase.rpc('sql', {
+      query: tableCreationSQL
+    });
+
+    if (sqlError) {
+      console.log('⚠️ RPC sql function not available for admin_users table');
+      console.log('📝 Please create the table manually in Supabase SQL Editor:');
+      console.log(tableCreationSQL);
+    } else {
+      console.log('✅ Admin users table created successfully');
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('❌ Error creating admin_users table:', error);
+    throw error;
+  }
+}
+
+// Verify admin credentials
+export async function verifyAdminCredentials(username: string, password: string): Promise<boolean> {
+  try {
+    const passwordHash = hashPassword(password);
+
+    const { data, error } = await supabase
+      .from('admin_users')
+      .select('*')
+      .eq('username', username)
+      .eq('password_hash', passwordHash)
+      .single();
+
+    if (error || !data) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('❌ Error verifying admin credentials:', error);
+    return false;
+  }
+}
+
+// Create or update admin user
+export async function createAdminUser(username: string, password: string): Promise<void> {
+  try {
+    const passwordHash = hashPassword(password);
+
+    // Try to update first
+    const { data: existingUser } = await supabase
+      .from('admin_users')
+      .select('id')
+      .eq('username', username)
+      .single();
+
+    if (existingUser) {
+      // Update existing user
+      const { error } = await supabase
+        .from('admin_users')
+        .update({ password_hash: passwordHash })
+        .eq('username', username);
+
+      if (error) throw error;
+      console.log(`✅ Updated admin user: ${username}`);
+    } else {
+      // Create new user
+      const { error } = await supabase
+        .from('admin_users')
+        .insert([{ username, password_hash: passwordHash }]);
+
+      if (error) throw error;
+      console.log(`✅ Created admin user: ${username}`);
+    }
+  } catch (error) {
+    console.error(`❌ Error creating/updating admin user ${username}:`, error);
+    throw error;
+  }
+}
+
+// Initialize admin users with default accounts
+export async function initializeAdminUsers() {
+  try {
+    console.log('🔧 Initializing admin users...');
+
+    // Check if table exists
+    const { error: checkError } = await supabase
+      .from('admin_users')
+      .select('count', { count: 'exact', head: true });
+
+    if (checkError && checkError.code === 'PGRST116') {
+      console.log('📝 Admin users table does not exist, creating it...');
+      await createAdminUsersTable();
+    }
+
+    // Create the three admin users
+    await createAdminUser('Daud', 'DYPS123');
+    await createAdminUser('Alkesh', 'DYPS123');
+    await createAdminUser('Max', 'DYPS123');
+
+    console.log('✅ Admin users initialized successfully');
+  } catch (error) {
+    console.error('❌ Error initializing admin users:', error);
+    throw error;
   }
 }

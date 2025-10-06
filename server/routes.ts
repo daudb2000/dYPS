@@ -2,7 +2,7 @@ import type { Express, Request, Response } from "express";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import { createServer, type Server } from "http";
-import { createApplication, getAllApplications, updateApplicationStatus, initializeDatabase, testSupabaseConnection, createApplicationsTable } from "./supabaseService";
+import { createApplication, getAllApplications, updateApplicationStatus, initializeDatabase, testSupabaseConnection, createApplicationsTable, verifyAdminCredentials, initializeAdminUsers } from "./supabaseService";
 import { insertMembershipApplicationSchema, updateApplicationStatusSchema } from "@shared/schema";
 import { sendApplicationNotification, testEmailConnection } from "./emailService";
 import { z } from "zod";
@@ -110,11 +110,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { username, password } = req.body;
       console.log('🔐 Admin login attempt for username:', username);
 
-      // Admin credentials from environment variables
-      const adminUsername = process.env.ADMIN_USERNAME || "admin";
-      const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+      // Verify credentials against database
+      const isValid = await verifyAdminCredentials(username, password);
 
-      if (username === adminUsername && password === adminPassword) {
+      if (isValid) {
         req.session.isAdmin = true;
         req.session.adminUsername = username;
         console.log('✅ Admin login successful, session:', {
@@ -245,6 +244,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Applications table created successfully" });
     } catch (error) {
       res.status(500).json({ success: false, message: "Failed to create applications table" });
+    }
+  });
+
+  // POST /api/admin/database/init-users - Initialize admin users
+  app.post("/api/admin/database/init-users", async (req, res) => {
+    try {
+      await initializeAdminUsers();
+      res.json({ success: true, message: "Admin users initialized successfully" });
+    } catch (error) {
+      res.status(500).json({ success: false, message: "Failed to initialize admin users" });
     }
   });
 
